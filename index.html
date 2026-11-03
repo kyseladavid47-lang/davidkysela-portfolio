@@ -87,7 +87,7 @@ a:hover .roll>span,button:hover .roll>span{transform:translateY(-1.2em)}
 .marquee{display:flex;width:max-content;animation:mq 40s linear infinite}
 @keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
-@media (max-width: 760px){
+@container page (max-width: 760px){
 .m-nav{padding:14px 16px !important}
 .m-hero{padding:56px 20px 0 !important}
 .m-stage{height:600px !important;border-radius:28px !important}
@@ -113,8 +113,26 @@ a:hover .roll>span,button:hover .roll>span{transform:translateY(-1.2em)}
 .m-faqa{padding:0 0 26px 0 !important;font-size:16px !important}
 .proj .shot{clip-path:inset(0 round 24px) !important}
 }
+.show-sm{display:none !important}
+@container page (max-width: 760px){
+.show-sm{display:flex !important}
+.m-col{flex-direction:column !important;align-items:flex-start !important;justify-content:flex-start !important;gap:20px !important}
+.m-ctas{flex-direction:column !important;width:100% !important}
+.m-ctas>a{display:flex !important;justify-content:center !important;width:100% !important;box-sizing:border-box !important;font-size:18px !important}
+.m-col>p,.m-col>div{max-width:none !important}
+.h-hero{font-size:54px !important;line-height:.95 !important}
+.h-sec{font-size:48px !important;line-height:1 !important}
+.sec p,.m-hero p{font-size:18px !important}
+.m-vftop{font-size:11px !important}
+.m-pol{width:78% !important;margin:0 !important}
+.m-circle{width:130px !important;height:130px !important;font-size:16px !important}
+.price .btn,.m-card .btn{font-size:17px !important}
+.svc .thumb{display:none !important}
+.m-svct{font-size:36px !important}
+.menu-panel a{color:var(--ink)}
+}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.dolly,.hero-line>span,.fade-in,.float-a,.float-b,.marquee,.zoom-on-scroll,.reveal,.band-a,.band-b{animation:none !important}}
-@media (max-width: 760px){.hide-sm{display:none !important}.sec{padding-left:20px !important;padding-right:20px !important;padding-top:110px !important;padding-bottom:110px !important}.h-hero{font-size:56px !important}.h-sec{font-size:44px !important}.h-giant{font-size:64px !important}.band-txt{font-size:56px !important}}
+@container page (max-width: 760px){.hide-sm{display:none !important}.sec{padding-left:20px !important;padding-right:20px !important;padding-top:110px !important;padding-bottom:110px !important}.h-hero{font-size:56px !important}.h-sec{font-size:44px !important}.h-giant{font-size:64px !important}.band-txt{font-size:56px !important}}
 input:focus,textarea:focus{outline:2px solid #2B4CFF;outline-offset:2px}
 .hand{font-family:'Caveat',cursive;font-weight:600}
 .theme-light{--bg:#F3F2EE;--card:#FFFFFF;--soft:#F6F5F1;--ink:#0E0E0E;--solid:#0E0E0E;--deep:#0E0E0E;--muted:#55534E;--muted2:#6B6963;--body:#33312D;--line:#D8D6CF;--line2:#ECEAE4;--sel:#EEF1FF;--navbg:rgba(243,242,238,.82)}
@@ -136,7 +154,7 @@ input:focus,textarea:focus{outline:2px solid #2B4CFF;outline-offset:2px}
 </style>
 </helmet>
 
-<div class="{{themeClass}}" style="font-family: 'Host Grotesk', system-ui, sans-serif; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; overflow-x: clip; transition: background-color .5s ease, color .5s ease">
+<div class="{{themeClass}}" style="font-family: 'Host Grotesk', system-ui, sans-serif; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; overflow-x: clip; container-type: inline-size; container-name: page; transition: background-color .5s ease, color .5s ease">
 <svg width="0" height="0" style="position: absolute" aria-hidden="true"><defs>
 <radialGradient id="av-skin" cx="42%" cy="36%" r="70%"><stop offset="0%" stop-color="#FFDDC6"></stop><stop offset="65%" stop-color="#F2B48E"></stop><stop offset="100%" stop-color="#D9946C"></stop></radialGradient>
 <radialGradient id="av-hair" cx="40%" cy="25%" r="75%"><stop offset="0%" stop-color="#8A5D3F"></stop><stop offset="100%" stop-color="#3B2416"></stop></radialGradient>
@@ -167,9 +185,30 @@ David Kysela<span style="color: #2B4CFF; margin-left: -12px">.</span></a>
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"></path></svg>
 </sc-if>
 </button>
-<a class="btn btn-ink" href="#poptavka" style="text-decoration: none; font-size: 15px; font-weight: 500; padding: 13px 22px; border-radius: 999px; background: var(--solid); color: #FFFFFF"><span class="roll"><span><span>Napsat mi</span><span>Napsat mi</span></span></span></a>
+<a class="btn btn-ink hide-sm" href="#poptavka" style="text-decoration: none; font-size: 15px; font-weight: 500; padding: 13px 22px; border-radius: 999px; background: var(--solid); color: #FFFFFF"><span class="roll"><span><span>Napsat mi</span><span>Napsat mi</span></span></span></a>
+<button class="show-sm" onClick="{{toggleMenu}}" aria-label="{{menuLabel}}" aria-expanded="{{menuOpen}}" style="width: 52px; height: 52px; border-radius: 50%; border: none; background: var(--solid); color: #FFFFFF; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+<sc-if value="{{menuClosed}}" hint-placeholder-val="{{ true }}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 8h16"></path><path d="M4 16h16"></path></svg>
+</sc-if>
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12"></path><path d="M18 6L6 18"></path></svg>
+</sc-if>
+</button>
 </div>
 </div>
+<sc-if value="{{menuOpen}}" hint-placeholder-val="{{ false }}">
+<div class="menu-panel" style="position: absolute; top: 100%; left: 0; right: 0; height: calc(100vh - 80px); background: var(--bg); border-top: 1px solid var(--line2); padding: 28px 20px 40px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; gap: 32px; overflow-y: auto">
+<nav style="display: flex; flex-direction: column" aria-label="Mobilní menu">
+<sc-for list="{{menuLinks}}" as="l" hint-placeholder-count="7">
+<a href="{{l.href}}" onClick="{{closeMenu}}" style="text-decoration: none; font-size: 40px; font-weight: 600; letter-spacing: -0.04em; padding: 10px 0; border-bottom: 1px solid var(--line2); display: flex; justify-content: space-between; align-items: center">{{l.label}}<span style="font-size: 22px; color: #2B4CFF">→</span></a>
+</sc-for>
+</nav>
+<div style="display: flex; flex-direction: column; gap: 12px">
+<a href="#poptavka" onClick="{{closeMenu}}" style="text-decoration: none; text-align: center; font-size: 18px; font-weight: 500; padding: 20px; border-radius: 999px; background: var(--solid); color: #FFFFFF">Nezávazná poptávka</a>
+<a href="tel:+420605001377" style="text-decoration: none; text-align: center; font-size: 18px; font-weight: 500; padding: 19px; border-radius: 999px; border: 1px solid var(--ink)">Zavolat 605 001 377</a>
+</div>
+</div>
+</sc-if>
 </header>
 
 <!-- HERO -->
@@ -180,9 +219,9 @@ David Kysela<span style="color: #2B4CFF; margin-left: -12px">.</span></a>
 <span class="hero-line"><span>Weby, které</span></span>
 <span class="hero-line d2"><span>opravdu <span style="font-style: italic; font-weight: 300; color: #2B4CFF">prodávají.</span></span></span>
 </h1>
-<div class="fade-in" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 40px">
+<div class="fade-in m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 40px">
 <p style="margin: 0; font-size: 21px; line-height: 1.5; color: var(--muted); max-width: 470px; font-weight: 400">Jsem David. Navrhuju a stavím weby a e-shopy pro živnostníky, řemeslníky a startupy. A když chcete, natočím vám k tomu i video. Za pevnou cenu a osobně, bez agentury mezi námi.</p>
-<div style="display: flex; gap: 12px; flex-wrap: wrap; position: relative">
+<div class="m-ctas" style="display: flex; gap: 12px; flex-wrap: wrap; position: relative">
 <div class="hand hide-sm" style="position: absolute; right: 10px; top: -64px; font-size: 26px; color: #2B4CFF; transform: rotate(-4deg); display: flex; align-items: flex-end; gap: 4px; white-space: nowrap">zvedám to osobně
 <svg width="44" height="40" viewBox="0 0 44 40" fill="none" stroke="#2B4CFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6c16 0 28 8 30 26"></path><path d="M26 26l8 8 6-10"></path></svg></div>
 <a class="btn btn-ink" href="#poptavka" style="text-decoration: none; font-size: 17px; font-weight: 500; padding: 20px 32px; border-radius: 999px; background: var(--solid); color: #FFFFFF"><span class="roll"><span><span>Nezávazná poptávka</span><span>Nezávazná poptávka</span></span></span></a>
@@ -346,7 +385,7 @@ David Kysela<span style="color: #2B4CFF; margin-left: -12px">.</span></a>
 <!-- STACK STICKERS -->
 <section class="sec" style="padding: 160px 40px 40px">
 <div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
-<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+<div class="reveal m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
 <h2 class="h-sec" style="margin: 0; font-size: 80px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">S čím <span style="font-style: italic; font-weight: 300">pracuju</span></h2>
 <span class="hand" style="font-size: 32px; color: #2B4CFF; transform: rotate(-3deg)">a každý měsíc se učím něco nového</span>
 </div>
@@ -380,7 +419,7 @@ David Kysela<span style="color: #2B4CFF; margin-left: -12px">.</span></a>
 <!-- PROJECTS -->
 <section id="prace" class="sec" style="padding: 160px 40px">
 <div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 100px">
-<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<div class="reveal m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
 <h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Vybrané<br><span style="font-style: italic; font-weight: 300">projekty</span></h2>
 <p style="margin: 0; font-size: 18px; line-height: 1.55; color: var(--muted); max-width: 380px">Žádné šablony ze šuplíku. Každý web stavím podle toho, co má pro firmu vydělat.</p>
 </div>
@@ -397,7 +436,7 @@ David Kysela<span style="color: #2B4CFF; margin-left: -12px">.</span></a>
 </div>
 <div class="peek" style="position: absolute; left: 32px; bottom: 32px; background: var(--solid); color: #FFFFFF; padding: 14px 22px; border-radius: 999px; font-size: 15px; font-weight: 500">Otevřít narky.cz ↗</div>
 </div>
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: flex-start">
+<div class="m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: flex-start">
 <div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
 <span style="font-size: 40px; font-weight: 600; letter-spacing: -0.035em">NARKY</span>
 <span style="font-size: 18px; line-height: 1.55; color: var(--muted)">Web pro rodinnou prodejnu nářadí a zahradní techniky. Nabídka, servis, galerie, mapa a poptávkový formulář, postavené tak, aby je lidé z okolí našli na Googlu.</span>
@@ -421,7 +460,7 @@ David Kysela<span style="color: #2B4CFF; margin-left: -12px">.</span></a>
 </div>
 <div class="peek" style="position: absolute; left: 32px; bottom: 32px; background: var(--solid); color: #FFFFFF; padding: 14px 22px; border-radius: 999px; font-size: 15px; font-weight: 500">Otevřít e-shop ↗</div>
 </div>
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: flex-start">
+<div class="m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: flex-start">
 <div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
 <span style="font-size: 40px; font-weight: 600; letter-spacing: -0.035em">VIRAAL</span>
 <span style="font-size: 18px; line-height: 1.55; color: var(--muted)">E-shop s digitálním produktem. Košík, platby přes Stripe, recenze a kompletní podmínky včetně GDPR a cookie lišty.</span>
@@ -447,7 +486,7 @@ Jeden člověk <span class="m-shape" style="display: inline-block; width: 150px;
 <!-- SERVICES -->
 <section id="sluzby" class="sec" style="padding: 0 40px 180px">
 <div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 72px">
-<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<div class="reveal m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
 <h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Co pro vás<br><span style="font-style: italic; font-weight: 300">udělám</span></h2>
 <p style="margin: 0; font-size: 18px; line-height: 1.55; color: var(--muted); max-width: 380px">Od návrhu po hosting. Nemusíte shánět grafika, programátora ani správce zvlášť.</p>
 </div>
@@ -509,7 +548,7 @@ Jeden člověk <span class="m-shape" style="display: inline-block; width: 150px;
 <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,12,24,.72) 0%, rgba(8,12,24,.25) 45%, rgba(8,12,24,.15) 100%)"></div>
 <!-- viewfinder -->
 <div style="position: absolute; inset: 36px; display: flex; flex-direction: column; justify-content: space-between; color: #FFFFFF; font-family: 'Geist Mono', monospace; font-size: 14px">
-<div style="display: flex; justify-content: space-between; align-items: center">
+<div class="m-vftop" style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap">
 <span style="display: flex; align-items: center; gap: 10px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #FF4D3D; animation: fa 1.2s steps(2) infinite"></span>REC 00:01:24:12</span>
 <span>4K · 24 FPS · ALT 92 m</span>
 </div>
@@ -542,15 +581,15 @@ Jeden člověk <span class="m-shape" style="display: inline-block; width: 150px;
 </div>
 <!-- polaroids -->
 <div class="reveal" style="max-width: 1360px; margin: 72px auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 32px">
-<figure class="sticker" style="margin: 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(-4deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
+<figure class="sticker m-pol" style="margin: 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(-4deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
 <img src="./assets/91d3011955b3bc7c5254d2e172864c04.jpg" alt="Dron a ovladač na stole při západu slunce" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px">
 <figcaption class="hand" style="font-size: 26px; text-align: center; color: #0e0e0e">zlatá hodinka = nejlepší světlo</figcaption>
 </figure>
-<figure class="sticker" style="margin: 30px 0 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(3deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
+<figure class="sticker m-pol" style="margin: 30px 0 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(3deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
 <img src="./assets/9f411795aed5ce5f84fa79f66b0bd331.jpg" alt="Dron ve vzduchu ovládaný z ruky" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px">
 <figcaption class="hand" style="font-size: 26px; text-align: center; color: #0e0e0e">a jde se točit</figcaption>
 </figure>
-<figure class="sticker" style="margin: 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(-2deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
+<figure class="sticker m-pol" style="margin: 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(-2deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
 <img src="./assets/3b6739e5f54ba0ea1ef8dd2ba7c661ab.jpg" alt="Dron na dřevěném kůlu na louce" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px">
 <figcaption class="hand" style="font-size: 26px; text-align: center; color: #0e0e0e">můj parťák do terénu</figcaption>
 </figure>
@@ -573,7 +612,7 @@ Jeden člověk <span class="m-shape" style="display: inline-block; width: 150px;
 <!-- PRICING -->
 <section id="cenik" class="sec" style="padding: 180px 40px">
 <div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 80px">
-<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<div class="reveal m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
 <h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Férové<br><span style="font-style: italic; font-weight: 300">ceny</span></h2>
 <p style="margin: 0; font-size: 18px; line-height: 1.55; color: var(--muted); max-width: 380px">Konečnou cenu znáte předem. Žádné skryté poplatky, žádná překvapení na faktuře.<span class="hand" style="display: block; font-size: 28px; color: #2B4CFF; margin-top: 10px; transform: rotate(-2deg)">fakt. ruku na to.</span></p>
 </div>
@@ -734,7 +773,7 @@ Jeden člověk <span class="m-shape" style="display: inline-block; width: 150px;
 <!-- SIDE PROJECT: GAME -->
 <section id="hra" class="sec" style="padding: 0 40px 200px">
 <div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
-<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<div class="reveal m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
 <div style="display: flex; flex-direction: column; gap: 20px">
 <span style="font-size: 15px; color: var(--muted2)">(Po večerech)</span>
 <h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Kde je<br><span style="font-style: italic; font-weight: 300; color: #2B4CFF">Mazlík?</span></h2>
@@ -760,12 +799,12 @@ Jeden člověk <span class="m-shape" style="display: inline-block; width: 150px;
 <!-- FOOTER -->
 <footer style="background: #2B4CFF; color: #FFFFFF; overflow: hidden">
 <div class="sec" style="max-width: 1360px; margin: 0 auto; padding: 160px 40px 48px; display: flex; flex-direction: column; gap: 96px">
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 40px">
+<div class="m-col" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 40px">
 <div style="display: flex; flex-direction: column; gap: 14px; max-width: 520px">
 <span style="font-size: 26px; line-height: 1.35; font-weight: 400">Chci, aby každá česká firma měla web, za který se nemusí stydět.</span>
 <span class="hand" style="font-size: 40px; color: #FFD3BE; transform: rotate(-3deg); align-self: flex-start">— David</span>
 </div>
-<a class="btn" href="#poptavka" style="text-decoration: none; width: 180px; height: 180px; border-radius: 50%; background: var(--card); color: var(--ink); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.2">Napsat<br>poptávku</a>
+<a class="btn m-circle" href="#poptavka" style="text-decoration: none; width: 180px; height: 180px; border-radius: 50%; background: var(--card); color: var(--ink); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.2">Napsat<br>poptávku</a>
 </div>
 <div class="h-giant" style="font-size: 184px; font-weight: 700; letter-spacing: -0.07em; line-height: .85">Pojďme na to.</div>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; font-size: 15px; color: #D5DCFF; border-top: 1px solid rgba(255,255,255,.3); padding-top: 28px">
@@ -787,7 +826,7 @@ class Component extends DCLogic {
     super(props);
     let dark = false;
     try { const t = localStorage.getItem('dk-theme'); if (t) dark = t === 'dark'; } catch (e) {}
-    this.state = { step: 1, type: null, budget: null, time: null, name: '', contact: '', msg: '', gdpr: false, err: false, sent: false, faqTab: 0, faqOpen: 0, dark: dark, biz: 0, pokes: 0 };
+    this.state = { step: 1, type: null, budget: null, time: null, name: '', contact: '', msg: '', gdpr: false, err: false, sent: false, faqTab: 0, faqOpen: 0, menu: false, dark: dark, biz: 0, pokes: 0 };
   }
     renderVals() {
     const s = this.state;
@@ -850,6 +889,9 @@ class Component extends DCLogic {
       themeClass: s.dark ? 'theme-dark' : 'theme-light', isDark: s.dark, isLight: !s.dark,
       themeLabel: s.dark ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim',
       toggleTheme: () => { const d = !s.dark; try { localStorage.setItem('dk-theme', d ? 'dark' : 'light'); } catch (e) {} set({ dark: d }); },
+      menuOpen: s.menu, menuClosed: !s.menu, menuLabel: s.menu ? 'Zavřít menu' : 'Otevřít menu',
+      toggleMenu: () => set({ menu: !s.menu }), closeMenu: () => set({ menu: false }),
+      menuLinks: [{ label: 'O mně', href: '#omne' }, { label: 'Práce', href: '#prace' }, { label: 'Služby', href: '#sluzby' }, { label: 'Video', href: '#video' }, { label: 'Ceník', href: '#cenik' }, { label: 'Otázky', href: '#faq' }, { label: 'Moje hra', href: '#hra' }],
       biz: biz, bizTabs: bizTabs,
       bubbleText: bubbles[s.pokes % bubbles.length], bubbleHint: s.pokes === 0 ? 'klikni na mě' : '',
       poke: () => set({ pokes: s.pokes + 1 }),
