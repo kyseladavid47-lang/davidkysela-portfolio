@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<title>David Kysela – weby a e-shopy</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&amp;family=Geist+Mono:wght@400;500&amp;family=Caveat:wght@500;700&amp;display=swap" rel="stylesheet">
+<style>
+html{scroll-behavior:smooth}
+body{margin:0;background:#F3F2EE}
+a{color:var(--ink)}a:hover{color:var(--ink)}
+::selection{background:#2B4CFF;color:#fff}
+
+/* nav underline reveal */
+.ul{position:relative;text-decoration:none}
+.ul::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:1.5px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s cubic-bezier(.7,0,.2,1)}
+.ul:hover::after{transform:scaleX(1);transform-origin:left}
+
+/* rolling button text */
+.roll{display:inline-flex;overflow:hidden;height:1.2em;line-height:1.2em}
+.roll>span{display:flex;flex-direction:column;transition:transform .55s cubic-bezier(.7,0,.2,1)}
+.roll>span>span{height:1.2em}
+a:hover .roll>span,button:hover .roll>span{transform:translateY(-1.2em)}
+.btn{transition:background .4s ease,color .4s ease,transform .4s ease}
+.btn:hover{transform:translateY(-2px)}
+.btn-ink:hover{background:#2B4CFF !important}
+.btn-line:hover{background:var(--ink) !important;color:var(--bg) !important}
+
+/* hero dolly */
+.stage-wrap{perspective:1600px}
+.dolly{animation:dolly 1.9s cubic-bezier(.16,.8,.12,1) both;transform-origin:50% 0%}
+@keyframes dolly{0%{transform:translateY(140px) scale(.72) rotateX(22deg);opacity:0;filter:blur(8px)}55%{opacity:1;filter:blur(0)}100%{transform:none;opacity:1;filter:none}}
+.hero-line{display:block;overflow:hidden}
+.hero-line>span{display:inline-block;animation:rise 1.2s cubic-bezier(.16,.8,.12,1) both}
+.hero-line.d2>span{animation-delay:.12s}
+@keyframes rise{from{transform:translateY(105%)}to{transform:none}}
+.fade-in{animation:fade 1.2s .5s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+
+/* scroll-driven */
+@supports (animation-timeline: view()){
+.zoom-on-scroll{animation:zoomscroll linear both;animation-timeline:view();animation-range:exit-crossing 0% exit 100%}
+@keyframes zoomscroll{to{transform:scale(1.14)}}
+.reveal{animation:rv linear both;animation-timeline:view();animation-range:entry 0% cover 28%}
+@keyframes rv{from{opacity:0;transform:translateY(70px)}to{opacity:1;transform:none}}
+.band-a{animation:bandA linear both;animation-timeline:view()}
+@keyframes bandA{from{transform:rotate(-4deg) translateX(8%)}to{transform:rotate(-4deg) translateX(-14%)}}
+.band-b{animation:bandB linear both;animation-timeline:view()}
+@keyframes bandB{from{transform:rotate(3deg) translateX(-14%)}to{transform:rotate(3deg) translateX(8%)}}
+}
+
+/* floating */
+.float-a{animation:fa 7s ease-in-out infinite}
+.float-b{animation:fa 8s ease-in-out infinite reverse}
+@keyframes fa{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+
+/* project hover reveal */
+.proj .shot{clip-path:inset(7% 7% 7% 7% round 28px);transition:clip-path 1s cubic-bezier(.7,0,.2,1)}
+.proj:hover .shot{clip-path:inset(0% 0% 0% 0% round 28px)}
+.proj .shot-inner{transform:scale(1.08);transition:transform 1.2s cubic-bezier(.7,0,.2,1)}
+.proj:hover .shot-inner{transform:scale(1)}
+.proj .peek{transform:translateY(24px);opacity:0;transition:all .6s cubic-bezier(.7,0,.2,1)}
+.proj:hover .peek{transform:none;opacity:1}
+.proj .arrow{transition:transform .6s cubic-bezier(.7,0,.2,1)}
+.proj:hover .arrow{transform:rotate(-45deg)}
+
+/* service row hover reveal */
+.svc{position:relative;overflow:hidden}
+.svc .fill{position:absolute;inset:0;background:var(--solid);transform:scaleY(0);transform-origin:bottom;transition:transform .7s cubic-bezier(.7,0,.2,1);z-index:0}
+.svc:hover .fill{transform:scaleY(1)}
+.svc>.row{position:relative;z-index:1;transition:color .5s ease}
+.svc:hover>.row{color:#fff}
+.svc:hover .muted{color:#BDBDBD !important}
+.svc .thumb{opacity:0;transform:scale(.6) rotate(-8deg);transition:all .7s cubic-bezier(.7,0,.2,1)}
+.svc:hover .thumb{opacity:1;transform:none}
+
+.price:hover{transform:translateY(-6px)}
+.price{transition:transform .5s cubic-bezier(.7,0,.2,1)}
+
+.marquee{display:flex;width:max-content;animation:mq 40s linear infinite}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+@media (max-width: 760px){
+.m-nav{padding:14px 16px !important}
+.m-hero{padding:56px 20px 0 !important}
+.m-stage{height:600px !important;border-radius:28px !important}
+.m-browser{width:92% !important;margin:150px auto 0 !important;height:400px !important}
+.m-mockpad{padding:24px !important;gap:16px !important}
+.m-mockh{font-size:30px !important}
+.m-aboutpic{height:440px !important;border-radius:28px !important}
+.m-stk{font-size:30px !important;padding:10px 20px !important}
+.m-bands{height:330px !important;margin-top:80px !important}
+.m-bands .band-a{top:70px !important;padding:16px 0 !important}
+.m-bands .band-b{top:180px !important;padding:16px 0 !important}
+.m-bands .band-txt{gap:28px !important}
+.m-bands .band-txt>span[style*="flex: none"]{width:36px !important;height:36px !important}
+.m-shot{height:340px !important}
+.m-pmock{width:90% !important;padding:24px !important}
+.m-pmh{font-size:28px !important}
+.m-shape{width:72px !important;height:44px !important;transform:translateY(-4px) !important}
+.m-shape2{width:44px !important;height:44px !important;transform:translateY(-4px) !important}
+.m-svcrow{gap:10px 16px !important;padding:28px 4px !important}
+.m-svct{font-size:34px !important;flex:1 1 auto !important}
+.m-vf{min-height:480px !important;border-radius:28px !important}
+.m-card{padding:32px 22px !important;border-radius:28px !important}
+.m-faqa{padding:0 0 26px 0 !important;font-size:16px !important}
+.proj .shot{clip-path:inset(0 round 24px) !important}
+}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.dolly,.hero-line>span,.fade-in,.float-a,.float-b,.marquee,.zoom-on-scroll,.reveal,.band-a,.band-b{animation:none !important}}
+@media (max-width: 760px){.hide-sm{display:none !important}.sec{padding-left:20px !important;padding-right:20px !important;padding-top:110px !important;padding-bottom:110px !important}.h-hero{font-size:56px !important}.h-sec{font-size:44px !important}.h-giant{font-size:64px !important}.band-txt{font-size:56px !important}}
+input:focus,textarea:focus{outline:2px solid #2B4CFF;outline-offset:2px}
+.hand{font-family:'Caveat',cursive;font-weight:600}
+.theme-light{--bg:#F3F2EE;--card:#FFFFFF;--soft:#F6F5F1;--ink:#0E0E0E;--solid:#0E0E0E;--deep:#0E0E0E;--muted:#55534E;--muted2:#6B6963;--body:#33312D;--line:#D8D6CF;--line2:#ECEAE4;--sel:#EEF1FF;--navbg:rgba(243,242,238,.82)}
+.theme-dark{--bg:#0C0C0E;--card:#18181B;--soft:#202024;--ink:#F3F2EE;--solid:#2B4CFF;--deep:#141417;--muted:#B4B1A9;--muted2:#8F8C85;--body:#D8D6CF;--line:#3A3A3E;--line2:#2A2A2E;--sel:#1C2554;--navbg:rgba(12,12,14,.8);color-scheme:dark}
+.theme-dark .btn-ink:hover{background:#4F6BFF !important}
+.theme-dark ::placeholder{color:#77756F}
+.theme-btn{transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.theme-btn:hover{transform:rotate(-20deg) scale(1.08)}
+.swap{animation:swap .6s cubic-bezier(.16,.8,.12,1)}
+@keyframes swap{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.av{transition:transform .8s cubic-bezier(.34,1.56,.64,1);transform-origin:50% 100%}
+.av-wrap:hover .av{transform:rotate(-6deg) scale(1.04)}
+.bust{animation:bust 1.4s 1s cubic-bezier(.34,1.4,.64,1) both}
+@keyframes bust{from{transform:translateY(110%)}to{transform:none}}
+.bubble{animation:pop .7s 2s cubic-bezier(.34,1.56,.64,1) both;transform-origin:0% 100%}
+@keyframes pop{from{transform:scale(0);opacity:0}to{transform:none;opacity:1}}
+.sticker{transition:transform .6s cubic-bezier(.34,1.56,.64,1)}
+.sticker:hover{transform:rotate(0deg) scale(1.06) !important}
+</style>
+</helmet>
+
+<div class="{{themeClass}}" style="font-family: 'Host Grotesk', system-ui, sans-serif; color: var(--ink); background: var(--bg); -webkit-font-smoothing: antialiased; overflow-x: clip; transition: background-color .5s ease, color .5s ease">
+<svg width="0" height="0" style="position: absolute" aria-hidden="true"><defs>
+<radialGradient id="av-skin" cx="42%" cy="36%" r="70%"><stop offset="0%" stop-color="#FFDDC6"></stop><stop offset="65%" stop-color="#F2B48E"></stop><stop offset="100%" stop-color="#D9946C"></stop></radialGradient>
+<radialGradient id="av-hair" cx="40%" cy="25%" r="75%"><stop offset="0%" stop-color="#8A5D3F"></stop><stop offset="100%" stop-color="#3B2416"></stop></radialGradient>
+<linearGradient id="av-hood" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1E1E1E"></stop><stop offset="100%" stop-color="#0E0E0E"></stop></linearGradient>
+<radialGradient id="av-shine" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFFFFF" stop-opacity=".6"></stop><stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"></stop></radialGradient>
+</defs></svg>
+
+<!-- NAV -->
+<header style="position: sticky; top: 0; z-index: 30; background: var(--navbg); backdrop-filter: blur(14px) saturate(1.4)">
+<div class="m-nav" style="max-width: 1360px; margin: 0 auto; padding: 22px 40px; display: flex; align-items: center; justify-content: space-between; gap: 20px">
+<a class="av-wrap" href="#top" style="text-decoration: none; font-size: 19px; font-weight: 600; letter-spacing: -0.02em; display: flex; align-items: center; gap: 12px">
+<span style="width: 40px; height: 40px; border-radius: 50%; background: #FFD3BE; overflow: hidden; display: flex; align-items: flex-end; justify-content: center"><svg class="av" width="40" height="43" viewBox="0 0 240 260" aria-hidden="true"><path d="M18 260C22 214 64 194 120 194s98 20 102 66z" fill="url(#av-hood)"></path><path d="M100 178h40v26c0 10-9 16-20 16s-20-6-20-16z" fill="#E09A74"></path><ellipse cx="55" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse><ellipse cx="185" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse><ellipse cx="120" cy="128" rx="66" ry="76" fill="url(#av-skin)"></ellipse><path d="M54 118C46 66 80 34 124 34c46 0 74 30 68 82-6-20-20-32-38-38 4 10 2 18-4 22-14-18-44-26-70-16-14 6-22 18-26 34z" fill="url(#av-hair)"></path><ellipse cx="94" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse><ellipse cx="146" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse><circle cx="96" cy="134" r="9" fill="#5A3A22"></circle><circle cx="148" cy="134" r="9" fill="#5A3A22"></circle><path d="M96 170q24 26 48 0z" fill="#6B2318"></path><path d="M99 171q21 9 42 0l-2 5q-19 7-38 0z" fill="#FFFFFF"></path></svg></span>
+David Kysela<span style="color: #2B4CFF; margin-left: -12px">.</span></a>
+<nav class="hide-sm" style="display: flex; gap: 40px; font-size: 15px; font-weight: 450">
+<a class="ul" href="#omne">O mně</a>
+<a class="ul" href="#prace">Práce</a>
+<a class="ul" href="#sluzby">Služby</a>
+<a class="ul" href="#video">Video</a>
+<a class="ul" href="#cenik">Ceník</a>
+<a class="ul" href="#faq">Otázky</a>
+</nav>
+<div style="display: flex; align-items: center; gap: 10px">
+<button onClick="{{toggleTheme}}" aria-label="{{themeLabel}}" title="{{themeLabel}}" class="theme-btn" style="width: 46px; height: 46px; border-radius: 50%; border: 1px solid var(--line); background: var(--card); color: var(--ink); display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+<sc-if value="{{isDark}}" hint-placeholder-val="{{ false }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2v2.5M12 19.5V22M4.2 4.2l1.8 1.8M18 18l1.8 1.8M2 12h2.5M19.5 12H22M4.2 19.8L6 18M18 6l1.8-1.8"></path></svg>
+</sc-if>
+<sc-if value="{{isLight}}" hint-placeholder-val="{{ true }}">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"></path></svg>
+</sc-if>
+</button>
+<a class="btn btn-ink" href="#poptavka" style="text-decoration: none; font-size: 15px; font-weight: 500; padding: 13px 22px; border-radius: 999px; background: var(--solid); color: #FFFFFF"><span class="roll"><span><span>Napsat mi</span><span>Napsat mi</span></span></span></a>
+</div>
+</div>
+</header>
+
+<!-- HERO -->
+<section id="top" class="m-hero" style="padding: 120px 40px 0">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 64px">
+<div style="display: flex; flex-direction: column; gap: 56px">
+<h1 class="h-hero" style="margin: 0; font-size: 148px; line-height: .92; letter-spacing: -0.055em; font-weight: 600">
+<span class="hero-line"><span>Weby, které</span></span>
+<span class="hero-line d2"><span>opravdu <span style="font-style: italic; font-weight: 300; color: #2B4CFF">prodávají.</span></span></span>
+</h1>
+<div class="fade-in" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 40px">
+<p style="margin: 0; font-size: 21px; line-height: 1.5; color: var(--muted); max-width: 470px; font-weight: 400">Jsem David. Navrhuju a stavím weby a e-shopy pro živnostníky, řemeslníky a startupy. A když chcete, natočím vám k tomu i video. Za pevnou cenu a osobně, bez agentury mezi námi.</p>
+<div style="display: flex; gap: 12px; flex-wrap: wrap; position: relative">
+<div class="hand hide-sm" style="position: absolute; right: 10px; top: -64px; font-size: 26px; color: #2B4CFF; transform: rotate(-4deg); display: flex; align-items: flex-end; gap: 4px; white-space: nowrap">zvedám to osobně
+<svg width="44" height="40" viewBox="0 0 44 40" fill="none" stroke="#2B4CFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6c16 0 28 8 30 26"></path><path d="M26 26l8 8 6-10"></path></svg></div>
+<a class="btn btn-ink" href="#poptavka" style="text-decoration: none; font-size: 17px; font-weight: 500; padding: 20px 32px; border-radius: 999px; background: var(--solid); color: #FFFFFF"><span class="roll"><span><span>Nezávazná poptávka</span><span>Nezávazná poptávka</span></span></span></a>
+<a class="btn btn-line" href="tel:+420605001377" style="text-decoration: none; font-size: 17px; font-weight: 500; padding: 19px 30px; border-radius: 999px; border: 1px solid var(--ink)"><span class="roll"><span><span>605 001 377</span><span>Zavolat teď</span></span></span></a>
+</div>
+</div>
+</div>
+
+<!-- dolly stage -->
+<div class="stage-wrap">
+<div class="dolly m-stage" style="position: relative; border-radius: 44px; overflow: hidden; background: #2B4CFF; height: 720px">
+<div class="zoom-on-scroll" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center">
+<!-- giant shapes -->
+<div style="position: absolute; width: 560px; height: 560px; border-radius: 50%; background: #3D5CFF; left: -140px; top: -180px"></div>
+<div style="position: absolute; width: 420px; height: 200px; border-radius: 999px; background: #FFD3BE; right: -60px; bottom: 60px; transform: rotate(-14deg)"></div>
+<div style="position: absolute; width: 150px; height: 150px; border-radius: 36px; background: #D6F0E1; left: 9%; bottom: 80px; transform: rotate(12deg)"></div>
+<!-- try-it chips -->
+<div style="position: absolute; top: 28px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; z-index: 4; padding: 0 16px">
+<span class="hand" style="font-size: 26px; color: #ffffff">vyzkoušejte si: jaký web by měl váš podnik?</span>
+<div style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center" role="tablist" aria-label="Typ podniku">
+<sc-for list="{{bizTabs}}" as="b" hint-placeholder-count="4">
+<button role="tab" onClick="{{b.pick}}" style="{{b.style}}">{{b.label}}</button>
+</sc-for>
+</div>
+</div>
+<!-- browser -->
+<div class="m-browser" style="position: relative; width: min(860px, 86%); margin-left: auto; margin-right: 5%; margin-top: 70px; height: 470px; background: #ffffff; color: #0e0e0e; border-radius: 22px; box-shadow: 0 60px 120px -40px rgba(10,20,80,.6); overflow: hidden; display: flex; flex-direction: column">
+<div style="display: flex; align-items: center; gap: 7px; padding: 14px 18px; border-bottom: 1px solid #eeece7">
+<span style="width: 11px; height: 11px; border-radius: 50%; background: #e9e7e1"></span><span style="width: 11px; height: 11px; border-radius: 50%; background: #e9e7e1"></span><span style="width: 11px; height: 11px; border-radius: 50%; background: #e9e7e1"></span>
+<span style="margin: 0 auto; font-family: 'Geist Mono', monospace; font-size: 12px; color: #6b6963; background: #f3f2ee; padding: 5px 40px; border-radius: 8px">{{biz.url}}</span>
+</div>
+<div class="swap" style="flex: 1; display: flex; gap: 0">
+<div class="m-mockpad" style="flex: 1.15; padding: 40px; display: flex; flex-direction: column; gap: 22px; justify-content: center">
+<span style="font-family: 'Geist Mono', monospace; font-size: 11px; color: #6b6963; letter-spacing: .08em">{{biz.tag}}</span>
+<span class="m-mockh" style="font-size: 44px; font-weight: 600; line-height: .98; letter-spacing: -0.045em">{{biz.headline}}</span>
+<div style="display: flex; gap: 8px"><span style="{{biz.ctaStyle}}">{{biz.cta}}</span><span style="border: 1px solid #dddad3; font-size: 13px; padding: 11px 18px; border-radius: 999px">{{biz.second}}</span></div>
+</div>
+<div class="hide-sm" style="flex: 1; padding: 20px 20px 20px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="{{biz.t1}}"></div>
+<div style="{{biz.t2}}"></div>
+<div style="{{biz.t3}}"></div>
+</div>
+</div>
+</div>
+<!-- chat -->
+<!-- David bust peeking into the stage -->
+<div class="av-wrap hide-sm" style="position: absolute; left: 3%; bottom: 0; width: 330px; height: 360px; z-index: 3">
+<div class="bust" style="position: absolute; inset: 0; display: flex; align-items: flex-end">
+<button onClick="{{poke}}" aria-label="Šťouchnout do Davida" style="all: unset; cursor: pointer; display: block; line-height: 0">
+<svg class="av" width="330" height="358" viewBox="0 0 240 260" role="img" aria-label="3D avatar Davida Kysely" style="filter: drop-shadow(0 30px 40px rgba(10,20,80,.45))">
+<path d="M18 260C22 214 64 194 120 194s98 20 102 66z" fill="url(#av-hood)"></path>
+<path d="M86 196c8 16 60 16 68 0" stroke="#2E2E2E" stroke-width="6" fill="none" stroke-linecap="round"></path>
+<path d="M100 178h40v26c0 10-9 16-20 16s-20-6-20-16z" fill="#E09A74"></path>
+<ellipse cx="55" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse>
+<ellipse cx="185" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse>
+<ellipse cx="120" cy="128" rx="66" ry="76" fill="url(#av-skin)"></ellipse>
+<path d="M54 118C46 66 80 34 124 34c46 0 74 30 68 82-6-20-20-32-38-38 4 10 2 18-4 22-14-18-44-26-70-16-14 6-22 18-26 34z" fill="url(#av-hair)"></path>
+<path d="M84 44c14-12 38-16 56-8-20-2-36 2-48 12z" fill="#A97A58" opacity=".55"></path>
+<path d="M78 110q14-9 28-3" stroke="#3B2416" stroke-width="6" stroke-linecap="round" fill="none"></path>
+<path d="M134 107q14-6 28 3" stroke="#3B2416" stroke-width="6" stroke-linecap="round" fill="none"></path>
+<ellipse cx="94" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse>
+<ellipse cx="146" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse>
+<circle cx="96" cy="134" r="9" fill="#5A3A22"></circle><circle cx="148" cy="134" r="9" fill="#5A3A22"></circle>
+<circle cx="96" cy="134" r="4.5" fill="#1A0F08"></circle><circle cx="148" cy="134" r="4.5" fill="#1A0F08"></circle>
+<circle cx="99.5" cy="130" r="2.8" fill="#FFFFFF"></circle><circle cx="151.5" cy="130" r="2.8" fill="#FFFFFF"></circle>
+<path d="M118 142q-5 16 2 19 6 2 9-2" stroke="#C97F5C" stroke-width="3" stroke-linecap="round" fill="none"></path>
+<ellipse cx="78" cy="162" rx="11" ry="7" fill="#F28C7A" opacity=".35"></ellipse>
+<ellipse cx="162" cy="162" rx="11" ry="7" fill="#F28C7A" opacity=".35"></ellipse>
+<path d="M96 170q24 26 48 0z" fill="#6B2318"></path>
+<path d="M99 171q21 9 42 0l-2 5q-19 7-38 0z" fill="#FFFFFF"></path>
+<ellipse cx="112" cy="94" rx="20" ry="6" fill="url(#av-shine)"></ellipse>
+</svg>
+</button>
+</div>
+<div class="bubble" style="position: absolute; left: 250px; top: 20px; background: #ffffff; color: #0e0e0e; border-radius: 24px 24px 24px 6px; padding: 16px 20px; width: 240px; box-shadow: 0 30px 60px -30px rgba(10,20,80,.55)" aria-live="polite">
+<span style="display: block; font-size: 12px; color: #6b6963; margin-bottom: 4px">David · teď</span>
+<span style="font-size: 16px; line-height: 1.35">{{bubbleText}}</span>
+<span class="hand" style="display: block; font-size: 18px; color: #2b4cff; margin-top: 6px">{{bubbleHint}}</span>
+</div>
+</div>
+<div class="float-b hide-sm" style="position: absolute; right: 7%; top: 120px; background: var(--solid); color: #FFFFFF; border-radius: 22px; padding: 18px 22px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6)">
+<span style="font-size: 12px; color: #A9A79F">Nová poptávka z webu</span>
+<span style="font-size: 26px; font-weight: 600; letter-spacing: -0.02em">+ 1 zakázka</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- TRUST STRIP -->
+<section class="sec" style="padding: 120px 40px 0">
+<div class="reveal" style="max-width: 1360px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 48px; border-top: 1px solid var(--line); padding-top: 40px">
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="font-size: 44px; font-weight: 600; letter-spacing: -0.04em">24 h</span><span style="font-size: 16px; color: var(--muted); line-height: 1.5">Na každou poptávku odpovím nejpozději druhý den.</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="font-size: 44px; font-weight: 600; letter-spacing: -0.04em">Pevná cena</span><span style="font-size: 16px; color: var(--muted); line-height: 1.5">Víte, kolik zaplatíte, ještě než začnu pracovat.</span></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="font-size: 44px; font-weight: 600; letter-spacing: -0.04em">Z praxe</span><span style="font-size: 16px; color: var(--muted); line-height: 1.5">Sám provozuju e-shop, takže vím, co web musí umět.</span></div>
+</div>
+</section>
+
+<!-- ABOUT ME -->
+<section id="omne" class="sec" style="padding: 180px 40px 40px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 80px; align-items: center">
+<div class="reveal av-wrap m-aboutpic" style="flex: 1 1 420px; min-width: 0; position: relative; height: 620px; border-radius: 44px; background: #FFD3BE; overflow: hidden">
+<div style="position: absolute; width: 380px; height: 380px; border-radius: 50%; background: #FFC3A6; right: -90px; top: -90px"></div>
+<div style="position: absolute; width: 130px; height: 60px; border-radius: 999px; background: #2B4CFF; left: 40px; top: 60px; transform: rotate(-12deg)"></div>
+<div style="position: absolute; width: 70px; height: 70px; border-radius: 20px; background: #D6F0E1; right: 60px; top: 230px; transform: rotate(16deg)"></div>
+<div style="position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: center">
+<svg class="av" width="460" height="498" viewBox="0 0 240 260" role="img" aria-label="3D avatar Davida Kysely" style="max-width: 100%; height: auto; filter: drop-shadow(0 30px 40px rgba(120,50,10,.35))">
+<path d="M18 260C22 214 64 194 120 194s98 20 102 66z" fill="url(#av-hood)"></path>
+<path d="M86 196c8 16 60 16 68 0" stroke="#2E2E2E" stroke-width="6" fill="none" stroke-linecap="round"></path>
+<path d="M100 178h40v26c0 10-9 16-20 16s-20-6-20-16z" fill="#E09A74"></path>
+<ellipse cx="55" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse>
+<ellipse cx="185" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse>
+<ellipse cx="120" cy="128" rx="66" ry="76" fill="url(#av-skin)"></ellipse>
+<path d="M54 118C46 66 80 34 124 34c46 0 74 30 68 82-6-20-20-32-38-38 4 10 2 18-4 22-14-18-44-26-70-16-14 6-22 18-26 34z" fill="url(#av-hair)"></path>
+<path d="M84 44c14-12 38-16 56-8-20-2-36 2-48 12z" fill="#A97A58" opacity=".55"></path>
+<path d="M78 110q14-9 28-3" stroke="#3B2416" stroke-width="6" stroke-linecap="round" fill="none"></path>
+<path d="M134 107q14-6 28 3" stroke="#3B2416" stroke-width="6" stroke-linecap="round" fill="none"></path>
+<ellipse cx="94" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse>
+<ellipse cx="146" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse>
+<circle cx="96" cy="134" r="9" fill="#5A3A22"></circle><circle cx="148" cy="134" r="9" fill="#5A3A22"></circle>
+<circle cx="96" cy="134" r="4.5" fill="#1A0F08"></circle><circle cx="148" cy="134" r="4.5" fill="#1A0F08"></circle>
+<circle cx="99.5" cy="130" r="2.8" fill="#FFFFFF"></circle><circle cx="151.5" cy="130" r="2.8" fill="#FFFFFF"></circle>
+<path d="M118 142q-5 16 2 19 6 2 9-2" stroke="#C97F5C" stroke-width="3" stroke-linecap="round" fill="none"></path>
+<ellipse cx="78" cy="162" rx="11" ry="7" fill="#F28C7A" opacity=".35"></ellipse>
+<ellipse cx="162" cy="162" rx="11" ry="7" fill="#F28C7A" opacity=".35"></ellipse>
+<path d="M96 170q24 26 48 0z" fill="#6B2318"></path>
+<path d="M99 171q21 9 42 0l-2 5q-19 7-38 0z" fill="#FFFFFF"></path>
+<ellipse cx="112" cy="94" rx="20" ry="6" fill="url(#av-shine)"></ellipse>
+</svg>
+</div>
+<div class="hand" style="position: absolute; right: 36px; top: 110px; font-size: 32px; color: #0e0e0e; transform: rotate(6deg); display: flex; flex-direction: column; align-items: flex-end">to jsem já
+<svg width="70" height="60" viewBox="0 0 70 60" fill="none" stroke="#0E0E0E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M60 4C50 30 34 46 10 52"></path><path d="M20 42L10 52l13 4"></path></svg>
+</div>
+</div>
+
+<div class="reveal" style="flex: 1 1 480px; min-width: 0; display: flex; flex-direction: column; gap: 36px">
+<span style="font-size: 15px; color: var(--muted2)">(O mně)</span>
+<h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Ahoj,<br>jsem <span style="font-style: italic; font-weight: 300; color: #2B4CFF">David.</span></h2>
+<p style="margin: 0; font-size: 21px; line-height: 1.6; color: var(--body)">Studuju obor <strong style="font-weight: 600">Vývoj aplikací na SPŠE</strong> a programování pro mě dávno není jen škola. Postavil jsem web naší rodinné prodejně nářadí NARKY a od té doby pracuju na webech i e-shopech pro další lidi. Nejvíc mě baví chvíle, kdy web opravdu přivede někoho do obchodu.</p>
+<p style="margin: 0; font-size: 21px; line-height: 1.6; color: var(--body)">A když zrovna nepíšu kód, držím v ruce kameru nebo ovladač od dronu. Žádné korporátní řeči, žádné přeposílání mezi lidmi. Zavoláme si, domluvíme se a já to postavím.</p>
+<span class="hand" style="font-size: 54px; color: #2B4CFF; line-height: 1; transform: rotate(-3deg); align-self: flex-start">David Kysela</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 14px; padding-top: 8px">
+<div class="sticker" style="background: var(--card); border-radius: 22px; padding: 20px 22px; display: flex; gap: 14px; align-items: center; transform: rotate(-1.5deg)">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2B4CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5z"></path><path d="M6 11v5c3 2.5 9 2.5 12 0v-5"></path></svg>
+<span style="font-size: 16px; line-height: 1.35">Student SPŠE,<br>obor Vývoj aplikací</span></div>
+<div class="sticker" style="background: var(--card); border-radius: 22px; padding: 20px 22px; display: flex; gap: 14px; align-items: center; transform: rotate(1.2deg)">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2B4CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l1.5-5h15L21 9"></path><path d="M4 9v11h16V9"></path><path d="M10 20v-6h4v6"></path></svg>
+<span style="font-size: 16px; line-height: 1.35">Rodinná firma NARKY<br>od roku 1997</span></div>
+<div class="sticker" style="background: var(--card); border-radius: 22px; padding: 20px 22px; display: flex; gap: 14px; align-items: center; transform: rotate(1deg)">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2B4CFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>
+<span style="font-size: 16px; line-height: 1.35">Telefon zvedám já,<br>ne call centrum</span></div>
+<div class="sticker" style="background: var(--solid); color: #FFFFFF; border-radius: 22px; padding: 20px 22px; display: flex; gap: 14px; align-items: center; transform: rotate(-1deg)">
+<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FFD3BE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"></rect><path d="M16 10l6-3v10l-6-3"></path></svg>
+<span style="font-size: 16px; line-height: 1.35">Točím a stříhám videa,<br>i z dronu</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- STACK STICKERS -->
+<section class="sec" style="padding: 160px 40px 40px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
+<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px">
+<h2 class="h-sec" style="margin: 0; font-size: 80px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">S čím <span style="font-style: italic; font-weight: 300">pracuju</span></h2>
+<span class="hand" style="font-size: 32px; color: #2B4CFF; transform: rotate(-3deg)">a každý měsíc se učím něco nového</span>
+</div>
+<div class="reveal" style="display: flex; flex-wrap: wrap; gap: 18px 16px; align-items: center">
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 700; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 999px; background: #FFD3BE; color: #0e0e0e; transform: rotate(-4deg); display: inline-block">HTML</span>
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 700; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 999px; background: #2B4CFF; color: #FFFFFF; transform: rotate(3deg); display: inline-block">CSS</span>
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 700; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 28px; background: #FFE98A; color: #0e0e0e; transform: rotate(-2deg); display: inline-block">JavaScript</span>
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 300; font-style: italic; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 999px; background: var(--solid); color: #FFFFFF; transform: rotate(5deg); display: inline-block">React</span>
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 700; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 999px; background: #D6F0E1; color: #0e0e0e; transform: rotate(-5deg); display: inline-block">Java</span>
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 700; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 28px; background: var(--card); border: 2px solid var(--ink); transform: rotate(2deg); display: inline-block">SQL</span>
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 300; font-style: italic; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 999px; background: #E3DCFF; color: #0e0e0e; transform: rotate(-3deg); display: inline-block">střih videa</span>
+<span class="sticker m-stk" style="font-size: 64px; font-weight: 700; letter-spacing: -0.04em; padding: 18px 40px; border-radius: 999px; background: #FFD3BE; color: #0e0e0e; transform: rotate(4deg); display: inline-block">dron</span>
+</div>
+</div>
+</section>
+
+<!-- CROSSED BANDS -->
+<section class="m-bands" style="position: relative; height: 560px; margin-top: 140px; overflow: hidden" aria-label="Služby v kostce">
+<div class="band-a" style="position: absolute; top: 140px; left: -10%; width: 120%; background: var(--deep); color: #F3F2EE; padding: 26px 0; transform: rotate(-4deg)">
+<div class="band-txt" style="display: flex; gap: 56px; align-items: center; white-space: nowrap; font-size: 104px; font-weight: 700; letter-spacing: -0.05em; line-height: 1">
+<span>WEBY</span><span style="width: 70px; height: 70px; border-radius: 50%; background: #2B4CFF; flex: none"></span><span>E-SHOPY</span><span style="width: 120px; height: 64px; border-radius: 999px; background: #FFD3BE; flex: none"></span><span>REDESIGN</span><span style="width: 66px; height: 66px; border-radius: 18px; background: #D6F0E1; flex: none; transform: rotate(18deg)"></span><span>VIDEO</span><span style="width: 70px; height: 70px; border-radius: 50%; background: #FF4D3D; flex: none"></span><span>SPRÁVA</span><span style="width: 70px; height: 70px; border-radius: 50%; background: #2B4CFF; flex: none"></span><span>WEBY</span>
+</div>
+</div>
+<div class="band-b" style="position: absolute; top: 300px; left: -10%; width: 120%; background: #2B4CFF; color: #FFFFFF; padding: 26px 0; transform: rotate(3deg)">
+<div class="band-txt" style="display: flex; gap: 56px; align-items: center; white-space: nowrap; font-size: 104px; font-weight: 300; font-style: italic; letter-spacing: -0.05em; line-height: 1">
+<span>rychle</span><span style="font-style: normal; font-weight: 700">✳</span><span>férově</span><span style="font-style: normal; font-weight: 700">✳</span><span>na míru</span><span style="font-style: normal; font-weight: 700">✳</span><span>bez agentur</span><span style="font-style: normal; font-weight: 700">✳</span><span>rychle</span><span style="font-style: normal; font-weight: 700">✳</span><span>férově</span>
+</div>
+</div>
+</section>
+
+<!-- PROJECTS -->
+<section id="prace" class="sec" style="padding: 160px 40px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 100px">
+<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Vybrané<br><span style="font-style: italic; font-weight: 300">projekty</span></h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: var(--muted); max-width: 380px">Žádné šablony ze šuplíku. Každý web stavím podle toho, co má pro firmu vydělat.</p>
+</div>
+
+<a class="proj reveal" href="https://www.narky.cz" style="text-decoration: none; color: #0e0e0e; display: flex; flex-direction: column; gap: 36px">
+<div class="shot m-shot" style="height: 640px; background: #ffd3be; position: relative; overflow: hidden">
+<div class="shot-inner" style="position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-top: 80px">
+<div class="m-pmock" style="width: min(980px, 84%); height: 92%; background: #ffffff; color: #0e0e0e; border-radius: 18px 18px 0 0; box-shadow: 0 40px 80px -40px rgba(120,50,10,.5); padding: 48px 52px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #b4541b; letter-spacing: .08em">RODINNÝ PODNIK OD ROKU 1997</span>
+<span class="m-pmh" style="font-size: 58px; font-weight: 600; line-height: .98; letter-spacing: -0.045em; max-width: 620px">Ověřené nářadí s osobním přístupem</span>
+<div style="display: flex; gap: 8px"><span style="background: #0e0e0e; color: #ffffff; font-size: 14px; padding: 12px 20px; border-radius: 999px">Navštivte prodejnu</span><span style="border: 1px solid #dddad3; font-size: 14px; padding: 12px 20px; border-radius: 999px">Servis</span></div>
+<div class="hide-sm" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: auto"><div style="height: 120px; border-radius: 12px; background: #f4eae2"></div><div style="height: 120px; border-radius: 12px; background: #eedfd3"></div><div style="height: 120px; border-radius: 12px; background: #f4eae2"></div><div style="height: 120px; border-radius: 12px; background: #eedfd3"></div></div>
+</div>
+</div>
+<div class="peek" style="position: absolute; left: 32px; bottom: 32px; background: var(--solid); color: #FFFFFF; padding: 14px 22px; border-radius: 999px; font-size: 15px; font-weight: 500">Otevřít narky.cz ↗</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
+<span style="font-size: 40px; font-weight: 600; letter-spacing: -0.035em">NARKY</span>
+<span style="font-size: 18px; line-height: 1.55; color: var(--muted)">Web pro rodinnou prodejnu nářadí a zahradní techniky. Nabídka, servis, galerie, mapa a poptávkový formulář, postavené tak, aby je lidé z okolí našli na Googlu.</span>
+</div>
+<div style="display: flex; align-items: center; gap: 24px">
+<span style="font-size: 15px; color: var(--muted)">Prezentace · Lokální SEO</span>
+<span class="arrow" style="width: 64px; height: 64px; border-radius: 50%; border: 1px solid var(--ink); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+</div>
+</div>
+</a>
+
+<a class="proj reveal" href="https://viraal-eshop.vercel.app/" style="text-decoration: none; color: #0e0e0e; display: flex; flex-direction: column; gap: 36px">
+<div class="shot m-shot" style="height: 640px; background: #d6f0e1; position: relative; overflow: hidden">
+<div class="shot-inner" style="position: absolute; inset: 0; display: flex; align-items: flex-end; justify-content: center; padding-top: 80px">
+<div class="m-pmock" style="width: min(980px, 84%); height: 92%; background: #0f0f12; color: #ffffff; border-radius: 18px 18px 0 0; box-shadow: 0 40px 80px -40px rgba(10,60,30,.6); padding: 48px 52px; box-sizing: border-box; display: flex; flex-direction: column; gap: 20px">
+<span style="font-family: 'Geist Mono', monospace; font-size: 12px; color: #9c9aa4; letter-spacing: .08em">2026 EDITION</span>
+<span class="m-pmh" style="font-size: 58px; font-weight: 600; line-height: .98; letter-spacing: -0.045em">Stop Guessing.<br>Start Growing.</span>
+<div style="display: flex; gap: 8px"><span style="background: #ffffff; color: #0f0f12; font-size: 14px; padding: 12px 20px; border-radius: 999px; font-weight: 600">Add to Cart — $49</span></div>
+<div class="hide-sm" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: auto"><div style="height: 120px; border-radius: 12px; background: #1b1b21"></div><div style="height: 120px; border-radius: 12px; background: #202027"></div><div style="height: 120px; border-radius: 12px; background: #1b1b21"></div><div style="height: 120px; border-radius: 12px; background: #202027"></div></div>
+</div>
+</div>
+<div class="peek" style="position: absolute; left: 32px; bottom: 32px; background: var(--solid); color: #FFFFFF; padding: 14px 22px; border-radius: 999px; font-size: 15px; font-weight: 500">Otevřít e-shop ↗</div>
+</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; align-items: flex-start">
+<div style="display: flex; flex-direction: column; gap: 12px; max-width: 640px">
+<span style="font-size: 40px; font-weight: 600; letter-spacing: -0.035em">VIRAAL</span>
+<span style="font-size: 18px; line-height: 1.55; color: var(--muted)">E-shop s digitálním produktem. Košík, platby přes Stripe, recenze a kompletní podmínky včetně GDPR a cookie lišty.</span>
+</div>
+<div style="display: flex; align-items: center; gap: 24px">
+<span style="font-size: 15px; color: var(--muted)">E-shop · Platby</span>
+<span class="arrow" style="width: 64px; height: 64px; border-radius: 50%; border: 1px solid var(--ink); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg></span>
+</div>
+</div>
+</a>
+</div>
+</section>
+
+<!-- STATEMENT BANNER -->
+<section class="sec" style="padding: 80px 40px 180px">
+<div class="reveal" style="max-width: 1360px; margin: 0 auto">
+<p class="h-giant" style="margin: 0; font-size: 132px; line-height: 1; letter-spacing: -0.055em; font-weight: 600">
+Jeden člověk <span class="m-shape" style="display: inline-block; width: 150px; height: 92px; border-radius: 999px; background: #2B4CFF; vertical-align: middle; transform: translateY(-8px)"></span> jeden telefon <span class="m-shape2" style="display: inline-block; width: 92px; height: 92px; border-radius: 50%; background: #FFD3BE; vertical-align: middle; transform: translateY(-8px)"></span> <span style="font-style: italic; font-weight: 300; color: var(--muted2)">žádná agentura.</span>
+</p>
+</div>
+</section>
+
+<!-- SERVICES -->
+<section id="sluzby" class="sec" style="padding: 0 40px 180px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 72px">
+<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Co pro vás<br><span style="font-style: italic; font-weight: 300">udělám</span></h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: var(--muted); max-width: 380px">Od návrhu po hosting. Nemusíte shánět grafika, programátora ani správce zvlášť.</p>
+</div>
+<div style="border-top: 1px solid var(--ink)">
+<div class="svc" style="border-bottom: 1px solid var(--ink)">
+<div class="fill"></div>
+<div class="row m-svcrow" style="display: flex; align-items: center; gap: 40px; padding: 44px 24px; flex-wrap: wrap">
+<span class="muted" style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--muted2); width: 40px">01</span>
+<span class="m-svct" style="font-size: 56px; font-weight: 600; letter-spacing: -0.045em; flex: 1 1 320px">Web na míru</span>
+<span class="muted" style="font-size: 17px; line-height: 1.55; color: var(--muted); flex: 1 1 320px; max-width: 420px">Prezentace firmy nebo živnosti. Rychlá, na mobilu perfektní a připravená na Google.</span>
+<span class="thumb hide-sm" style="width: 84px; height: 84px; border-radius: 50%; background: #2B4CFF; flex: none"></span>
+</div>
+</div>
+<div class="svc" style="border-bottom: 1px solid var(--ink)">
+<div class="fill"></div>
+<div class="row m-svcrow" style="display: flex; align-items: center; gap: 40px; padding: 44px 24px; flex-wrap: wrap">
+<span class="muted" style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--muted2); width: 40px">02</span>
+<span class="m-svct" style="font-size: 56px; font-weight: 600; letter-spacing: -0.045em; flex: 1 1 320px">E-shop</span>
+<span class="muted" style="font-size: 17px; line-height: 1.55; color: var(--muted); flex: 1 1 320px; max-width: 420px">Košík, platby kartou, doprava a faktury. Vím, jak e-shop funguje zevnitř.</span>
+<span class="thumb hide-sm" style="width: 120px; height: 84px; border-radius: 999px; background: #FFD3BE; flex: none"></span>
+</div>
+</div>
+<div class="svc" style="border-bottom: 1px solid var(--ink)">
+<div class="fill"></div>
+<div class="row m-svcrow" style="display: flex; align-items: center; gap: 40px; padding: 44px 24px; flex-wrap: wrap">
+<span class="muted" style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--muted2); width: 40px">03</span>
+<span class="m-svct" style="font-size: 56px; font-weight: 600; letter-spacing: -0.045em; flex: 1 1 320px">Redesign</span>
+<span class="muted" style="font-size: 17px; line-height: 1.55; color: var(--muted); flex: 1 1 320px; max-width: 420px">Starý web převedu do dnešní doby tak, aby z něj zase chodily poptávky.</span>
+<span class="thumb hide-sm" style="width: 84px; height: 84px; border-radius: 22px; background: #D6F0E1; flex: none"></span>
+</div>
+</div>
+<div class="svc" style="border-bottom: 1px solid var(--ink)">
+<div class="fill"></div>
+<div class="row m-svcrow" style="display: flex; align-items: center; gap: 40px; padding: 44px 24px; flex-wrap: wrap">
+<span class="muted" style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--muted2); width: 40px">04</span>
+<span class="m-svct" style="font-size: 56px; font-weight: 600; letter-spacing: -0.045em; flex: 1 1 320px">Správa a hosting</span>
+<span class="muted" style="font-size: 17px; line-height: 1.55; color: var(--muted); flex: 1 1 320px; max-width: 420px">Levný hosting, doména, zálohy a drobné úpravy. Zavoláte a je to hotové.</span>
+<span class="thumb hide-sm" style="width: 84px; height: 84px; border-radius: 50%; background: var(--bg); border: 10px solid #2B4CFF; box-sizing: border-box; flex: none"></span>
+</div>
+</div>
+<div class="svc" style="border-bottom: 1px solid var(--ink)">
+<div class="fill"></div>
+<div class="row m-svcrow" style="display: flex; align-items: center; gap: 40px; padding: 44px 24px; flex-wrap: wrap">
+<span class="muted" style="font-family: 'Geist Mono', monospace; font-size: 14px; color: var(--muted2); width: 40px">05</span>
+<span class="m-svct" style="font-size: 56px; font-weight: 600; letter-spacing: -0.045em; flex: 1 1 320px">Video a sítě</span>
+<span class="muted" style="font-size: 17px; line-height: 1.55; color: var(--muted); flex: 1 1 320px; max-width: 420px">Natočím a sestříhám video o vaší firmě, i ze vzduchu. A pomůžu vám rozjet Instagram, Facebook nebo TikTok.</span>
+<span class="thumb hide-sm" style="width: 84px; height: 84px; border-radius: 50%; background: #FF4D3D; border: 14px solid #FFE3DE; box-sizing: border-box; flex: none"></span>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- VIDEO & SOCIAL -->
+<section id="video" class="sec" style="padding: 0 40px 180px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<div class="reveal m-vf" style="flex: 999 1 560px; min-width: 0; position: relative; border-radius: 44px; overflow: hidden; background: var(--solid); min-height: 600px">
+<img class="zoom-on-scroll" src="./assets/5ebb691b2876d72bb9a6c80d6b691144.jpg" alt="David s ovladačem dronu na skalách u moře" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%">
+<div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(8,12,24,.72) 0%, rgba(8,12,24,.25) 45%, rgba(8,12,24,.15) 100%)"></div>
+<!-- viewfinder -->
+<div style="position: absolute; inset: 36px; display: flex; flex-direction: column; justify-content: space-between; color: #FFFFFF; font-family: 'Geist Mono', monospace; font-size: 14px">
+<div style="display: flex; justify-content: space-between; align-items: center">
+<span style="display: flex; align-items: center; gap: 10px"><span style="width: 12px; height: 12px; border-radius: 50%; background: #FF4D3D; animation: fa 1.2s steps(2) infinite"></span>REC 00:01:24:12</span>
+<span>4K · 24 FPS · ALT 92 m</span>
+</div>
+<div style="align-self: center; width: 90px; height: 90px; position: relative" aria-hidden="true">
+<span style="position: absolute; left: 0; top: 0; width: 22px; height: 22px; border-left: 2px solid #FFFFFF; border-top: 2px solid #FFFFFF"></span>
+<span style="position: absolute; right: 0; top: 0; width: 22px; height: 22px; border-right: 2px solid #FFFFFF; border-top: 2px solid #FFFFFF"></span>
+<span style="position: absolute; left: 0; bottom: 0; width: 22px; height: 22px; border-left: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF"></span>
+<span style="position: absolute; right: 0; bottom: 0; width: 22px; height: 22px; border-right: 2px solid #FFFFFF; border-bottom: 2px solid #FFFFFF"></span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 14px; font-family: 'Host Grotesk', sans-serif">
+<span class="hand" style="font-size: 30px; color: #FFD3BE; transform: rotate(-2deg); align-self: flex-start">tohle umím taky</span>
+<span class="h-sec" style="font-size: 88px; font-weight: 600; letter-spacing: -0.05em; line-height: .92">Natočím.<br>Sestříhám.<br><span style="font-style: italic; font-weight: 300">Zveřejním.</span></span>
+</div>
+</div>
+</div>
+<div class="reveal m-card" style="flex: 1 1 360px; min-width: 0; background: var(--card); border-radius: 44px; padding: 52px 44px; display: flex; flex-direction: column; gap: 36px; justify-content: space-between">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<span style="font-size: 15px; color: var(--muted2)">(Video a sociální sítě)</span>
+<span style="font-size: 36px; font-weight: 600; letter-spacing: -0.035em; line-height: 1.05">Web je začátek. Lidi ale přivede video.</span>
+<span style="font-size: 17px; line-height: 1.6; color: var(--muted)">S videem mám spoustu zkušeností a vlastní techniku včetně dronu. Natočím vaši dílnu, prodejnu nebo realizace tak, aby se na to lidi chtěli dívat.</span>
+</div>
+<div style="display: flex; flex-direction: column; border-top: 1px solid var(--line2)">
+<div style="display: flex; justify-content: space-between; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line2); font-size: 17px"><span>Promo a reklamní videa</span><span style="color: #2B4CFF">01</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line2); font-size: 17px"><span>Záběry z dronu</span><span style="color: #2B4CFF">02</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line2); font-size: 17px"><span>Krátká videa na Reels a TikTok</span><span style="color: #2B4CFF">03</span></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; padding: 18px 0; border-bottom: 1px solid var(--line2); font-size: 17px"><span>Rozjezd a správa sociálních sítí</span><span style="color: #2B4CFF">04</span></div>
+</div>
+<a class="btn btn-ink" href="#poptavka" style="text-decoration: none; text-align: center; font-weight: 500; font-size: 17px; padding: 20px; border-radius: 999px; background: var(--solid); color: #FFFFFF"><span class="roll"><span><span>Chci video</span><span>Chci video</span></span></span></a>
+</div>
+</div>
+<!-- polaroids -->
+<div class="reveal" style="max-width: 1360px; margin: 72px auto 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 32px">
+<figure class="sticker" style="margin: 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(-4deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
+<img src="./assets/91d3011955b3bc7c5254d2e172864c04.jpg" alt="Dron a ovladač na stole při západu slunce" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px">
+<figcaption class="hand" style="font-size: 26px; text-align: center; color: #0e0e0e">zlatá hodinka = nejlepší světlo</figcaption>
+</figure>
+<figure class="sticker" style="margin: 30px 0 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(3deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
+<img src="./assets/9f411795aed5ce5f84fa79f66b0bd331.jpg" alt="Dron ve vzduchu ovládaný z ruky" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px">
+<figcaption class="hand" style="font-size: 26px; text-align: center; color: #0e0e0e">a jde se točit</figcaption>
+</figure>
+<figure class="sticker" style="margin: 0; background: #ffffff; padding: 14px 14px 18px; border-radius: 6px; box-shadow: 0 30px 50px -30px rgba(0,0,0,.4); transform: rotate(-2deg); width: 300px; display: flex; flex-direction: column; gap: 14px">
+<img src="./assets/3b6739e5f54ba0ea1ef8dd2ba7c661ab.jpg" alt="Dron na dřevěném kůlu na louce" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block; border-radius: 2px">
+<figcaption class="hand" style="font-size: 26px; text-align: center; color: #0e0e0e">můj parťák do terénu</figcaption>
+</figure>
+</div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec" style="padding: 180px 40px; background: var(--deep); color: #F3F2EE">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 96px">
+<h2 class="h-sec reveal" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Od telefonátu<br><span style="font-style: italic; font-weight: 300; color: #8E8C86">k hotovému webu</span></h2>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 56px 40px">
+<div class="reveal" style="display: flex; flex-direction: column; gap: 18px; border-top: 1px solid #3A3A3A; padding-top: 28px"><span style="font-size: 72px; font-weight: 300; letter-spacing: -0.05em; color: #2B4CFF; line-height: 1">01</span><span style="font-size: 26px; font-weight: 600; letter-spacing: -0.02em">Úvodní hovor</span><span style="font-size: 16px; line-height: 1.6; color: #A9A79F">Za 15 minut probereme, co děláte a co má web umět. Hned potom znáte pevnou cenu.</span></div>
+<div class="reveal" style="display: flex; flex-direction: column; gap: 18px; border-top: 1px solid #3A3A3A; padding-top: 28px"><span style="font-size: 72px; font-weight: 300; letter-spacing: -0.05em; color: #2B4CFF; line-height: 1">02</span><span style="font-size: 26px; font-weight: 600; letter-spacing: -0.02em">Návrh</span><span style="font-size: 16px; line-height: 1.6; color: #A9A79F">Ukážu vám, jak bude web vypadat na počítači i mobilu. Platíte až po schválení.</span></div>
+<div class="reveal" style="display: flex; flex-direction: column; gap: 18px; border-top: 1px solid #3A3A3A; padding-top: 28px"><span style="font-size: 72px; font-weight: 300; letter-spacing: -0.05em; color: #2B4CFF; line-height: 1">03</span><span style="font-size: 26px; font-weight: 600; letter-spacing: -0.02em">Vývoj</span><span style="font-size: 16px; line-height: 1.6; color: #A9A79F">Web postavím, naplním a vyladím rychlost i SEO. Průběžně vidíte náhled online.</span></div>
+<div class="reveal" style="display: flex; flex-direction: column; gap: 18px; border-top: 1px solid #3A3A3A; padding-top: 28px"><span style="font-size: 72px; font-weight: 300; letter-spacing: -0.05em; color: #2B4CFF; line-height: 1">04</span><span style="font-size: 26px; font-weight: 600; letter-spacing: -0.02em">Spuštění</span><span style="font-size: 16px; line-height: 1.6; color: #A9A79F">Doména, hosting, zaškolení. A když bude potřeba cokoliv změnit, jsem na telefonu.</span></div>
+</div>
+</div>
+</section>
+
+<!-- PRICING -->
+<section id="cenik" class="sec" style="padding: 180px 40px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 80px">
+<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Férové<br><span style="font-style: italic; font-weight: 300">ceny</span></h2>
+<p style="margin: 0; font-size: 18px; line-height: 1.55; color: var(--muted); max-width: 380px">Konečnou cenu znáte předem. Žádné skryté poplatky, žádná překvapení na faktuře.<span class="hand" style="display: block; font-size: 28px; color: #2B4CFF; margin-top: 10px; transform: rotate(-2deg)">fakt. ruku na to.</span></p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 24px">
+<div class="price reveal m-card" style="background: var(--card); border-radius: 32px; padding: 48px 40px; display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 22px; font-weight: 600; letter-spacing: -0.02em">Web na jedné stránce</span><span style="font-size: 16px; color: var(--muted)">Pro živnostníky a řemeslníky</span></div>
+<div style="display: flex; align-items: baseline; gap: 10px"><span style="font-size: 16px; color: var(--muted)">od</span><span style="font-size: 68px; font-weight: 600; letter-spacing: -0.05em; line-height: 1">7 990</span><span style="font-size: 20px; font-weight: 500">Kč</span></div>
+<div style="display: flex; flex-direction: column; gap: 14px; font-size: 16px; color: var(--body); border-top: 1px solid var(--line2); padding-top: 28px"><span>Design na míru</span><span>Perfektní na mobilu</span><span>Formulář a mapa</span><span>Základní SEO</span></div>
+<a class="btn btn-line" href="#poptavka" style="margin-top: auto; text-decoration: none; text-align: center; font-weight: 500; font-size: 16px; padding: 18px; border-radius: 999px; border: 1px solid var(--ink)"><span class="roll"><span><span>Chci tenhle</span><span>Chci tenhle</span></span></span></a>
+</div>
+<div class="price reveal m-card" style="background: var(--card); border-radius: 32px; padding: 48px 40px; display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 22px; font-weight: 600; letter-spacing: -0.02em">Firemní web</span><span style="font-size: 16px; color: var(--muted)">Víc stránek, služby, reference</span></div>
+<div style="display: flex; align-items: baseline; gap: 10px"><span style="font-size: 16px; color: var(--muted)">od</span><span style="font-size: 68px; font-weight: 600; letter-spacing: -0.05em; line-height: 1">12 990</span><span style="font-size: 20px; font-weight: 500">Kč</span></div>
+<div style="display: flex; flex-direction: column; gap: 14px; font-size: 16px; color: var(--body); border-top: 1px solid var(--line2); padding-top: 28px"><span>Až 6 podstránek</span><span>Galerie a reference</span><span>Google Analytics</span><span>Vše z jednostránkového webu</span></div>
+<a class="btn btn-line" href="#poptavka" style="margin-top: auto; text-decoration: none; text-align: center; font-weight: 500; font-size: 16px; padding: 18px; border-radius: 999px; border: 1px solid var(--ink)"><span class="roll"><span><span>Chci tenhle</span><span>Chci tenhle</span></span></span></a>
+</div>
+<div class="price reveal m-card" style="background: #2B4CFF; color: #FFFFFF; border-radius: 32px; padding: 48px 40px; display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-direction: column; gap: 8px"><span style="font-size: 22px; font-weight: 600; letter-spacing: -0.02em">E-shop</span><span style="font-size: 16px; color: #D5DCFF">Prodávejte online i v noci</span></div>
+<div style="display: flex; align-items: baseline; gap: 10px"><span style="font-size: 16px; color: #D5DCFF">od</span><span style="font-size: 68px; font-weight: 600; letter-spacing: -0.05em; line-height: 1">19 990</span><span style="font-size: 20px; font-weight: 500">Kč</span></div>
+<div style="display: flex; flex-direction: column; gap: 14px; font-size: 16px; color: var(--sel); border-top: 1px solid rgba(255,255,255,.25); padding-top: 28px"><span>Katalog, košík, platby kartou</span><span>Doprava a výdejní místa</span><span>Obchodní podmínky a GDPR</span><span>Zaškolení ke správě</span></div>
+<a class="btn" href="#poptavka" style="margin-top: auto; text-decoration: none; text-align: center; font-weight: 500; font-size: 16px; padding: 18px; border-radius: 999px; background: var(--card); color: var(--ink)"><span class="roll"><span><span>Chci e-shop</span><span>Chci e-shop</span></span></span></a>
+</div>
+</div>
+<div class="reveal" style="display: flex; flex-wrap: wrap; gap: 16px 64px; font-size: 17px; color: var(--body); border-top: 1px solid var(--line); padding-top: 32px">
+<span>Správa a úpravy <strong style="font-weight: 600">490 Kč/h</strong></span>
+<span>Redesign <strong style="font-weight: 600">podle rozsahu</strong></span>
+<span>Hosting a doména <strong style="font-weight: 600">zajistím levně</strong></span>
+<span>Video a sociální sítě <strong style="font-weight: 600">po domluvě</strong></span>
+</div>
+</div>
+</section>
+
+<!-- CONTACT -->
+<section id="poptavka" class="sec" style="padding: 0 40px 180px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 24px">
+<div class="reveal m-card" style="flex: 999 1 600px; min-width: 0; background: var(--card); border-radius: 40px; padding: 64px; display: flex; flex-direction: column; gap: 48px">
+<h2 class="h-sec" style="margin: 0; font-size: 80px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Pojďme to<br><span style="font-style: italic; font-weight: 300; color: #2B4CFF">rozjet.</span></h2>
+
+<sc-if value="{{notSent}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 36px">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--muted2)"><span>Krok {{stepNo}} / 4</span><span>{{stepLabel}}</span></div>
+<div style="height: 2px; background: var(--line2)"><div style="{{progressStyle}}"></div></div>
+</div>
+
+<sc-if value="{{isStep1}}" hint-placeholder-val="{{ true }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<span style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em">Co potřebujete?</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{typeOpts}}" as="o" hint-placeholder-count="4">
+<button onClick="{{o.pick}}" style="{{o.style}}"><span style="font-weight: 600; font-size: 18px">{{o.label}}</span><span style="font-size: 14px; color: var(--muted2)">{{o.sub}}</span></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStep2}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<span style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em">S jakým rozpočtem počítáte?</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{budgetOpts}}" as="o" hint-placeholder-count="4">
+<button onClick="{{o.pick}}" style="{{o.style}}"><span style="font-weight: 600; font-size: 18px">{{o.label}}</span></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStep3}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<span style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em">Kdy by měl být web hotový?</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px">
+<sc-for list="{{timeOpts}}" as="o" hint-placeholder-count="4">
+<button onClick="{{o.pick}}" style="{{o.style}}"><span style="font-weight: 600; font-size: 18px">{{o.label}}</span></button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isStep4}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<span style="font-size: 28px; font-weight: 600; letter-spacing: -0.02em">Kam se vám ozvu?</span>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: 16px">
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--muted)">Jméno<input type="text" onInput="{{setName}}" value="{{name}}" placeholder="Jan Novák" style="font: inherit; font-size: 18px; color: var(--ink); padding: 14px 0; border: none; border-bottom: 1px solid var(--ink); background: transparent; border-radius: 0"></label>
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--muted)">Telefon nebo e-mail<input type="text" onInput="{{setContact}}" value="{{contact}}" placeholder="777 123 456" style="font: inherit; font-size: 18px; color: var(--ink); padding: 14px 0; border: none; border-bottom: 1px solid var(--ink); background: transparent; border-radius: 0"></label>
+</div>
+<label style="display: flex; flex-direction: column; gap: 8px; font-size: 14px; color: var(--muted)">Pár slov o projektu (nepovinné)<textarea onInput="{{setMsg}}" value="{{msg}}" rows="2" placeholder="Např. truhlárna, chceme ukázat realizace a mít Instagram." style="font: inherit; font-size: 18px; color: var(--ink); padding: 14px 0; border: none; border-bottom: 1px solid var(--ink); background: transparent; resize: vertical; border-radius: 0"></textarea></label>
+<label style="display: flex; gap: 12px; align-items: flex-start; font-size: 14px; color: var(--muted); line-height: 1.5"><input type="checkbox" onChange="{{toggleGdpr}}" checked="{{gdpr}}" style="width: 18px; height: 18px; margin-top: 1px; accent-color: #2B4CFF">Souhlasím se zpracováním údajů pro účely odpovědi na poptávku.</label>
+<sc-if value="{{showError}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 14px; color: #B42318">Vyplňte prosím telefon nebo e-mail a potvrďte souhlas.</span>
+</sc-if>
+</div>
+</sc-if>
+
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<sc-if value="{{canBack}}" hint-placeholder-val="{{ false }}">
+<button class="ul" onClick="{{back}}" style="font: inherit; font-size: 16px; background: transparent; border: none; padding: 12px 0; cursor: pointer; color: var(--ink)">← Zpět</button>
+</sc-if>
+<sc-if value="{{noBack}}" hint-placeholder-val="{{ true }}"><span></span></sc-if>
+<button class="btn btn-ink" onClick="{{next}}" style="font: inherit; font-size: 17px; font-weight: 500; background: var(--solid); color: #FFFFFF; border: none; padding: 20px 34px; border-radius: 999px; cursor: pointer">{{nextLabel}}</button>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{sent}}" hint-placeholder-val="{{ false }}">
+<div style="display: flex; flex-direction: column; gap: 20px; align-items: flex-start">
+<span style="width: 72px; height: 72px; border-radius: 50%; background: #D6F0E1; display: flex; align-items: center; justify-content: center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#167A47" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"></path></svg></span>
+<span style="font-size: 36px; font-weight: 600; letter-spacing: -0.03em; line-height: 1.1">{{thanks}}</span>
+<span style="font-size: 18px; color: var(--muted); line-height: 1.55">Když spěcháte, volejte rovnou na 605 001 377.</span>
+<button class="ul" onClick="{{reset}}" style="font: inherit; font-size: 16px; background: transparent; border: none; padding: 8px 0; cursor: pointer; color: var(--ink)">Poslat další poptávku</button>
+</div>
+</sc-if>
+</div>
+
+<div class="reveal m-card" style="flex: 1 1 340px; min-width: 0; background: var(--deep); color: #F3F2EE; border-radius: 40px; padding: 56px 48px; display: flex; flex-direction: column; justify-content: space-between; gap: 48px">
+<div style="display: flex; flex-direction: column; gap: 18px">
+<div class="av-wrap" style="display: flex; align-items: center; gap: 14px">
+<span style="width: 72px; height: 72px; border-radius: 50%; background: #FFD3BE; overflow: hidden; display: flex; align-items: flex-end; justify-content: center; flex: none"><svg class="av" width="72" height="78" viewBox="0 0 240 260" aria-hidden="true"><path d="M18 260C22 214 64 194 120 194s98 20 102 66z" fill="#2B4CFF"></path><path d="M100 178h40v26c0 10-9 16-20 16s-20-6-20-16z" fill="#E09A74"></path><ellipse cx="55" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse><ellipse cx="185" cy="136" rx="13" ry="18" fill="#EBA67F"></ellipse><ellipse cx="120" cy="128" rx="66" ry="76" fill="url(#av-skin)"></ellipse><path d="M54 118C46 66 80 34 124 34c46 0 74 30 68 82-6-20-20-32-38-38 4 10 2 18-4 22-14-18-44-26-70-16-14 6-22 18-26 34z" fill="url(#av-hair)"></path><path d="M78 110q14-9 28-3" stroke="#3B2416" stroke-width="6" stroke-linecap="round" fill="none"></path><path d="M134 107q14-6 28 3" stroke="#3B2416" stroke-width="6" stroke-linecap="round" fill="none"></path><ellipse cx="94" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse><ellipse cx="146" cy="132" rx="13" ry="15" fill="#FFFFFF"></ellipse><circle cx="96" cy="134" r="9" fill="#5A3A22"></circle><circle cx="148" cy="134" r="9" fill="#5A3A22"></circle><circle cx="99.5" cy="130" r="2.8" fill="#FFFFFF"></circle><circle cx="151.5" cy="130" r="2.8" fill="#FFFFFF"></circle><path d="M96 170q24 26 48 0z" fill="#6B2318"></path><path d="M99 171q21 9 42 0l-2 5q-19 7-38 0z" fill="#FFFFFF"></path></svg></span>
+<span class="hand" style="font-size: 26px; color: #FFD3BE; line-height: 1.1; transform: rotate(-2deg)">zvedne to David,<br>ne robot</span>
+</div>
+<span style="font-size: 38px; font-weight: 600; line-height: 1.05; letter-spacing: -0.035em">Radši to probereme po telefonu?</span>
+<span style="font-size: 17px; line-height: 1.6; color: #A9A79F">Za 10 minut zjistíme, co potřebujete a kolik to bude stát. Nezávazně.</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 28px">
+<a class="ul" href="tel:+420605001377" style="color: #FFFFFF; font-size: 44px; font-weight: 600; letter-spacing: -0.04em; align-self: flex-start">605 001 377</a>
+<a class="ul" href="mailto:kyseladavid47@gmail.com" style="color: #FFFFFF; font-size: 18px; align-self: flex-start; word-break: break-all">kyseladavid47@gmail.com</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="sec" style="padding: 0 40px 200px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 64px">
+<div class="reveal" style="flex: 1 1 340px; display: flex; flex-direction: column; gap: 32px">
+<h2 class="h-sec" style="margin: 0; font-size: 80px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Časté<br><span style="font-style: italic; font-weight: 300">otázky</span></h2>
+<div style="display: flex; gap: 8px; flex-wrap: wrap" role="tablist" aria-label="Kategorie otázek">
+<sc-for list="{{faqTabs}}" as="t" hint-placeholder-count="3">
+<button role="tab" onClick="{{t.pick}}" style="{{t.style}}">{{t.label}}</button>
+</sc-for>
+</div>
+</div>
+<div style="flex: 999 1 560px; min-width: 0; display: flex; flex-direction: column; border-top: 1px solid var(--ink)">
+<sc-for list="{{faqItems}}" as="f" hint-placeholder-count="3">
+<div style="border-bottom: 1px solid var(--line)">
+<button onClick="{{f.toggle}}" aria-expanded="{{f.open}}" style="font: inherit; width: 100%; background: transparent; border: none; padding: 34px 0; display: flex; justify-content: space-between; align-items: center; gap: 24px; text-align: left; cursor: pointer; color: var(--ink)">
+<span style="font-size: 24px; font-weight: 500; letter-spacing: -0.02em">{{f.q}}</span>
+<span style="{{f.iconStyle}}">+</span>
+</button>
+<sc-if value="{{f.open}}" hint-placeholder-val="{{ false }}">
+<p class="m-faqa" style="margin: 0; padding: 0 64px 34px 0; font-size: 18px; line-height: 1.65; color: var(--muted)">{{f.a}}</p>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</section>
+
+<!-- SIDE PROJECT: GAME -->
+<section id="hra" class="sec" style="padding: 0 40px 200px">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 56px">
+<div class="reveal" style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 20px">
+<span style="font-size: 15px; color: var(--muted2)">(Po večerech)</span>
+<h2 class="h-sec" style="margin: 0; font-size: 96px; line-height: .95; letter-spacing: -0.05em; font-weight: 600">Kde je<br><span style="font-style: italic; font-weight: 300; color: #2B4CFF">Mazlík?</span></h2>
+</div>
+<div style="display: flex; flex-direction: column; gap: 22px; max-width: 440px">
+<span style="display: inline-flex; align-self: flex-start; align-items: center; gap: 10px; font-size: 14px; padding: 8px 14px; border-radius: 999px; background: #FFE98A; color: #0e0e0e">
+<span style="width: 8px; height: 8px; border-radius: 50%; background: var(--solid); animation: fa 1.4s steps(2) infinite"></span>Pořád ve vývoji</span>
+<p style="margin: 0; font-size: 18px; line-height: 1.6; color: var(--muted)">Ve volném čase vyvíjím vlastní 3D hru. Celá vesnice k prozkoumání, mise s příběhem a jeden ztracený mazlík. Je to můj největší projekt a ukazuje, že mě vývoj baví i mimo práci.</p>
+<a class="btn btn-ink" href="https://kenyz-corporation.itch.io/kde-je-mazlik" style="align-self: flex-start; text-decoration: none; font-size: 17px; font-weight: 500; padding: 18px 30px; border-radius: 999px; background: var(--solid); color: #FFFFFF"><span class="roll"><span><span>Mrknout na itch.io ↗</span><span>Mrknout na itch.io ↗</span></span></span></a>
+</div>
+</div>
+<div class="reveal" style="position: relative">
+<video controls="" preload="none" playsinline="" poster="./assets/e2a9bce5e82b16235cb554343c7e8a3a.jpg" style="display: block; width: 100%; aspect-ratio: 16 / 9; border-radius: 40px; background: var(--solid); object-fit: cover">
+<source src="./assets/0a4e9778538b7c46f84fe9a81628daf7.mp4" type="video/mp4">
+</video>
+<div class="hand hide-sm" style="position: absolute; right: 40px; top: -46px; font-size: 32px; color: #2B4CFF; transform: rotate(4deg); display: flex; align-items: flex-end; gap: 6px">psst… najdete ho?
+<svg width="46" height="44" viewBox="0 0 46 44" fill="none" stroke="#2B4CFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4c14 4 24 16 26 34"></path><path d="M24 32l8 8 6-10"></path></svg>
+</div>
+</div>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer style="background: #2B4CFF; color: #FFFFFF; overflow: hidden">
+<div class="sec" style="max-width: 1360px; margin: 0 auto; padding: 160px 40px 48px; display: flex; flex-direction: column; gap: 96px">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 40px">
+<div style="display: flex; flex-direction: column; gap: 14px; max-width: 520px">
+<span style="font-size: 26px; line-height: 1.35; font-weight: 400">Chci, aby každá česká firma měla web, za který se nemusí stydět.</span>
+<span class="hand" style="font-size: 40px; color: #FFD3BE; transform: rotate(-3deg); align-self: flex-start">— David</span>
+</div>
+<a class="btn" href="#poptavka" style="text-decoration: none; width: 180px; height: 180px; border-radius: 50%; background: var(--card); color: var(--ink); display: flex; align-items: center; justify-content: center; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.2">Napsat<br>poptávku</a>
+</div>
+<div class="h-giant" style="font-size: 184px; font-weight: 700; letter-spacing: -0.07em; line-height: .85">Pojďme na to.</div>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 20px; font-size: 15px; color: #D5DCFF; border-top: 1px solid rgba(255,255,255,.3); padding-top: 28px">
+<span>© 2026 David Kysela</span>
+<div style="display: flex; gap: 32px; flex-wrap: wrap">
+<a class="ul" href="tel:+420605001377" style="color: #FFFFFF">605 001 377</a>
+<a class="ul" href="mailto:kyseladavid47@gmail.com" style="color: #FFFFFF">kyseladavid47@gmail.com</a>
+<a class="ul" href="#top" style="color: #FFFFFF">Nahoru ↑</a>
+</div>
+</div>
+</div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":13000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    let dark = false;
+    try { const t = localStorage.getItem('dk-theme'); if (t) dark = t === 'dark'; } catch (e) {}
+    this.state = { step: 1, type: null, budget: null, time: null, name: '', contact: '', msg: '', gdpr: false, err: false, sent: false, faqTab: 0, faqOpen: 0, dark: dark, biz: 0, pokes: 0 };
+  }
+    renderVals() {
+    const s = this.state;
+    const set = (o) => this.setState(o);
+    const optStyle = (sel) => 'font: inherit; text-align: left; display: flex; flex-direction: column; gap: 6px; padding: 24px 26px; border-radius: 22px; cursor: pointer; color: var(--ink); transition: all .3s ease; ' + (sel ? 'background: var(--sel); border: 1.5px solid #2B4CFF' : 'background: var(--soft); border: 1.5px solid transparent');
+    const mk = (arr, key) => arr.map((o) => Object.assign({}, o, { style: optStyle(s[key] === o.label), pick: () => { const u = {}; u[key] = o.label; u.step = s.step + 1; set(u); } }));
+    const typeOpts = mk([{ label: 'Web', sub: 'Prezentace firmy nebo živnosti' }, { label: 'E-shop', sub: 'Prodej zboží online' }, { label: 'Redesign', sub: 'Modernizace starého webu' }, { label: 'Správa webu', sub: 'Úpravy, hosting, podpora' }, { label: 'Video a sítě', sub: 'Natáčení, dron, Instagram' }], 'type');
+    const budgetOpts = mk([{ label: 'Do 10 000 Kč' }, { label: '10 – 20 000 Kč' }, { label: '20 – 40 000 Kč' }, { label: 'Zatím nevím' }], 'budget');
+    const timeOpts = mk([{ label: 'Co nejdřív' }, { label: 'Do měsíce' }, { label: 'Do 3 měsíců' }, { label: 'Nespěchá to' }], 'time');
+    const labels = ['', 'Typ projektu', 'Rozpočet', 'Termín', 'Kontakt'];
+    const next = () => {
+      if (s.step < 4) { set({ step: s.step + 1 }); return; }
+      if (!s.contact.trim() || !s.gdpr) { set({ err: true }); return; }
+      set({ sent: true, err: false });
+    };
+    const faqData = [
+      { label: 'Cena', items: [
+        { q: 'Kolik bude můj web stát?', a: 'Jednostránkový web začíná na 7 990 Kč, e-shop na 19 990 Kč. Přesnou cenu vám řeknu po krátkém hovoru, ještě než začnu cokoliv dělat.' },
+        { q: 'Kdy se platí?', a: 'Až po schválení návrhu. Nejdřív uvidíte, jak bude web vypadat, a teprve pak se rozhodnete.' },
+        { q: 'Jsou v ceně skryté poplatky?', a: 'Ne. Průběžně se platí jen hosting a doména, a ty vám zajistím za co nejnižší cenu.' }
+      ]},
+      { label: 'Průběh', items: [
+        { q: 'Jak dlouho to trvá?', a: 'Jednodušší web bývá hotový zhruba za dva týdny, e-shop podle rozsahu. Termín si domluvíme hned na začátku.' },
+        { q: 'Co od vás budu potřebovat?', a: 'Pár informací o firmě, logo a fotky, pokud je máte. S texty vám pomůžu.' },
+        { q: 'Můžu do webu zasahovat během tvorby?', a: 'Samozřejmě. Průběžně vidíte náhled online a můžete říct, co chcete jinak.' }
+      ]},
+      { label: 'Video', items: [
+        { q: 'Natáčíte i z dronu?', a: 'Ano. Mám vlastní techniku včetně dronu, takže vaši firmu, dílnu nebo realizace natočím i ze vzduchu.' },
+        { q: 'Postaráte se i o sociální sítě?', a: 'Klidně. Natočím a sestříhám krátká videa na Reels a TikTok a pomůžu vám profil rozjet a pravidelně plnit.' },
+        { q: 'Kolik stojí video?', a: 'Záleží na rozsahu natáčení a délce videa. Napište mi, co si představujete, a pošlu vám cenu předem.' }
+      ]},
+      { label: 'Po spuštění', items: [
+        { q: 'Budu si moct web upravovat sám?', a: 'Ano, ukážu vám, jak změnit texty a fotky. Nebo mi zavoláte a upravím to za vás.' },
+        { q: 'Kolik stojí správa?', a: 'Úpravy a správu počítám hodinově za 490 Kč/h. Platíte jen za to, co se opravdu udělá.' },
+        { q: 'Co když se web rozbije?', a: 'Zavoláte a řeším to. Web pravidelně zálohuju, takže nic nezmizí.' }
+      ]}
+    ];
+    const faqTabs = faqData.map((t, i) => ({ label: t.label, pick: () => set({ faqTab: i, faqOpen: 0 }), style: 'font: inherit; font-size: 15px; font-weight: 500; padding: 12px 20px; border-radius: 999px; cursor: pointer; transition: all .3s ease; ' + (i === s.faqTab ? 'background: var(--solid); color: #FFFFFF; border: 1px solid var(--ink)' : 'background: transparent; color: var(--ink); border: 1px solid var(--line)') }));
+    const faqItems = faqData[s.faqTab].items.map((f, i) => {
+      const open = s.faqOpen === i;
+      return Object.assign({}, f, { open: open, toggle: () => set({ faqOpen: open ? -1 : i }), iconStyle: 'flex: none; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 300; transition: all .4s cubic-bezier(.7,0,.2,1); ' + (open ? 'transform: rotate(45deg); background: #2B4CFF; color: #FFFFFF' : 'background: var(--card); color: var(--ink)') });
+    });
+    const first = s.name.trim() ? s.name.trim().split(' ')[0] : '';
+    const bizData = [
+      { label: 'Truhlářství', url: 'truhlarstvi-novak.cz', tag: 'TRUHLÁŘSTVÍ OD ROKU 1994', headline: 'Nábytek na míru, který vydrží generace.', cta: 'Poptat zakázku', second: 'Realizace', accent: '#0e0e0e', tiles: ['#e8d9c6', '#d3c1a8', '#f0e6d8'] },
+      { label: 'Kadeřnictví', url: 'salon-lucie.cz', tag: 'KADEŘNICTVÍ A BARBER', headline: 'Nový střih bez čekání. Objednejte se online.', cta: 'Rezervovat termín', second: 'Ceník', accent: '#b03a64', tiles: ['#f6d3df', '#e9b8ca', '#fbe9ef'] },
+      { label: 'Kavárna', url: 'kavarna-u-mlyna.cz', tag: 'VÝBEROVÁ KÁVA A DORTY', headline: 'Ráno tu voní káva, odpoledne domácí dorty.', cta: 'Zobrazit menu', second: 'Kde nás najdete', accent: '#6b3f1f', tiles: ['#e9d7c2', '#c9a27e', '#f4eadf'] },
+      { label: 'Autoservis', url: 'servis-dvorak.cz', tag: 'AUTOSERVIS A PNEUSERVIS', headline: 'Auto zpátky na silnici do druhého dne.', cta: 'Objednat servis', second: 'Služby', accent: '#1f4e8c', tiles: ['#d9e4ee', '#b7c9da', '#edf2f7'] }
+    ];
+    const b = bizData[s.biz];
+    const biz = Object.assign({}, b, {
+      ctaStyle: 'background: ' + b.accent + '; color: #ffffff; font-size: 13px; padding: 11px 18px; border-radius: 999px; transition: background .4s ease',
+      t1: 'border-radius: 14px; grid-row: span 2; transition: background .5s ease; background: ' + b.tiles[0],
+      t2: 'border-radius: 14px; transition: background .5s ease; background: ' + b.tiles[1],
+      t3: 'border-radius: 14px; transition: background .5s ease; background: ' + b.tiles[2]
+    });
+    const bizTabs = bizData.map((x, i) => ({ label: x.label, pick: () => set({ biz: i }), style: 'font: inherit; font-size: 14px; font-weight: 500; padding: 9px 16px; border-radius: 999px; cursor: pointer; transition: all .3s ease; ' + (i === s.biz ? 'background: #ffffff; color: #0e0e0e; border: 1px solid #ffffff' : 'background: rgba(255,255,255,.14); color: #ffffff; border: 1px solid rgba(255,255,255,.4)') }));
+    const bubbles = ['Ahoj! Návrh vašeho webu je hotový, mrkněte.', 'Hej, to lechtá!', 'Nahoře si zkuste přepnout typ podniku.', 'Psst… úplně dole je moje hra.', 'Dobře, dobře. Jdu zpátky kódovat.'];
+    return {
+      themeClass: s.dark ? 'theme-dark' : 'theme-light', isDark: s.dark, isLight: !s.dark,
+      themeLabel: s.dark ? 'Přepnout na světlý režim' : 'Přepnout na tmavý režim',
+      toggleTheme: () => { const d = !s.dark; try { localStorage.setItem('dk-theme', d ? 'dark' : 'light'); } catch (e) {} set({ dark: d }); },
+      biz: biz, bizTabs: bizTabs,
+      bubbleText: bubbles[s.pokes % bubbles.length], bubbleHint: s.pokes === 0 ? 'klikni na mě' : '',
+      poke: () => set({ pokes: s.pokes + 1 }),
+      typeOpts: typeOpts, budgetOpts: budgetOpts, timeOpts: timeOpts,
+      stepNo: s.step, stepLabel: labels[s.step],
+      progressStyle: 'height: 2px; background: #2B4CFF; transition: width .5s cubic-bezier(.7,0,.2,1); width: ' + (s.step * 25) + '%',
+      isStep1: s.step === 1, isStep2: s.step === 2, isStep3: s.step === 3, isStep4: s.step === 4,
+      canBack: s.step > 1, noBack: s.step === 1,
+      back: () => set({ step: Math.max(1, s.step - 1), err: false }),
+      next: next, nextLabel: s.step < 4 ? 'Pokračovat →' : 'Odeslat poptávku',
+      name: s.name, contact: s.contact, msg: s.msg, gdpr: s.gdpr,
+      setName: (e) => set({ name: e.target.value }),
+      setContact: (e) => set({ contact: e.target.value, err: false }),
+      setMsg: (e) => set({ msg: e.target.value }),
+      toggleGdpr: (e) => set({ gdpr: e.target.checked, err: false }),
+      showError: s.err, sent: s.sent, notSent: !s.sent,
+      thanks: first ? ('Díky, ' + first + '! Ozvu se do 24 hodin.') : 'Díky! Ozvu se do 24 hodin.',
+      reset: () => set({ step: 1, type: null, budget: null, time: null, name: '', contact: '', msg: '', gdpr: false, err: false, sent: false }),
+      faqTabs: faqTabs, faqItems: faqItems
+    };
+  }
+}
+</script>
+</body>
+</html>
